@@ -1110,29 +1110,24 @@
             
             return `
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-3.5 last:mb-0 pb-3 sm:pb-0 border-b border-white/5 sm:border-b-0 last:border-b-0">
-                    <div class="flex justify-between items-center sm:w-10">
+                    <div class="flex justify-between items-center sm:w-36 gap-2">
                         <span class="text-[10px] sm:text-[9px] text-gray-500 font-extrabold uppercase tracking-wider">${hand}</span>
-                        <div class="sm:hidden">
-                            <select onchange="selectBonus(${i}, ${j}, '${hand}', this.value)" ${selectDisabled ? 'disabled' : ''} class="w-24 h-11 text-[10px] font-extrabold bg-gray-900 border border-white/5 rounded-xl px-2 text-center focus:outline-none transition duration-200 ${selectStyle}">
+                        <div>
+                            <select onchange="selectBonus(${i}, ${j}, '${hand}', this.value)" ${selectDisabled ? 'disabled' : ''} class="w-24 h-12 text-[10px] font-extrabold bg-gray-900 border border-white/5 rounded-xl px-2 text-center focus:outline-none transition duration-200 ${selectStyle}">
                                 ${selectOpts}
                             </select>
                         </div>
                     </div>
                     <div class="flex-1 flex bg-gray-950/80 rounded-xl p-1 border border-white/5 gap-1.5">
-                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${i})" class="flex-1 h-11 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${leftClass}">
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${i})" class="flex-1 h-12 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${leftClass}">
                             ${escapeHTML(getShortName(PLAYERS[i], i))}
                         </button>
-                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', -1)" class="w-12 h-11 text-xs rounded-lg transition duration-200 font-bold flex items-center justify-center ${pushClass}">
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', -1)" class="flex-1 h-12 text-xs rounded-lg transition duration-200 font-bold flex items-center justify-center ${pushClass}">
                             Push
                         </button>
-                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${j})" class="flex-1 h-11 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${rightClass}">
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${j})" class="flex-1 h-12 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${rightClass}">
                             ${escapeHTML(getShortName(PLAYERS[j], j))}
                         </button>
-                    </div>
-                    <div class="hidden sm:block">
-                        <select onchange="selectBonus(${i}, ${j}, '${hand}', this.value)" ${selectDisabled ? 'disabled' : ''} class="w-24 h-11 text-[10px] font-extrabold bg-gray-900 border border-white/5 rounded-xl px-2 text-center focus:outline-none transition duration-200 ${selectStyle}">
-                            ${selectOpts}
-                        </select>
                     </div>
                 </div>
             `;
