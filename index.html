@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusoy Scorekeeper Pro</title>
+    <!-- Google Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#060713',
+                            panel: 'rgba(22, 22, 47, 0.45)',
+                            primary: '#7C3AED',
+                            success: '#10B981',
+                            danger: '#F43F5E',
+                            warning: '#F59E0B',
+                        },
+                        gray: {
+                            650: '#414a56',
+                            850: '#161e2e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --bg-color: #060713;
+            --text-primary: #f3f4f6;
+            
+            --brand-primary: #7C3AED;
+            --brand-primary-glow: rgba(124, 58, 237, 0.15);
+            
+            --brand-success: #10B981;
+            --brand-success-dark: #059669;
+            --brand-success-glow: rgba(16, 185, 129, 0.2);
+
+            --brand-danger: #F43F5E;
+            --brand-danger-glow: rgba(244, 63, 94, 0.2);
+
+            --brand-warning: #F59E0B;
+            --brand-warning-glow: rgba(245, 158, 11, 0.2);
+            
+            --glass-bg: rgba(22, 22, 47, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: 24px;
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Spacing and Radius Tokens */
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --border-radius-lg: 1rem;
+            --border-radius-xl: 1.5rem;
+        }
+
+        /* Tailwind Offline/Fallback Utility Classes */
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .w-3 { width: 0.75rem !important; }
+        .h-3 { height: 0.75rem !important; }
+        .w-3\.5 { width: 0.875rem !important; }
+        .h-3\.5 { height: 0.875rem !important; }
+        .w-4 { width: 1rem !important; }
+        .h-4 { height: 1rem !important; }
+        .w-5 { width: 1.25rem !important; }
+        .h-5 { height: 1.25rem !important; }
+        .w-6 { width: 1.5rem !important; }
+        .h-6 { height: 1.5rem !important; }
+        .w-7 { width: 1.75rem !important; }
+        .h-7 { height: 1.75rem !important; }
+        .w-12 { width: 3rem !important; }
+        .h-12 { height: 3rem !important; }
+        .w-24 { width: 6rem !important; }
+        .h-24 { height: 6rem !important; }
+        .w-full { width: 100% !important; }
+        .h-full { height: 100% !important; }
+        
+        .flex { display: flex !important; }
+        .flex-col { flex-direction: column !important; }
+        .items-center { align-items: center !important; }
+        .justify-between { justify-content: space-between !important; }
+        .justify-center { justify-content: center !important; }
+        .grid { display: grid !important; }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        
+        .gap-1\.5 { gap: 0.375rem !important; }
+        .gap-2 { gap: 0.5rem !important; }
+        .gap-2\.5 { gap: 0.625rem !important; }
+        .gap-3 { gap: 0.75rem !important; }
+        
+        .mb-2 { margin-bottom: 0.5rem !important; }
+        .mb-3 { margin-bottom: 0.75rem !important; }
+        .mb-3\.5 { margin-bottom: 0.875rem !important; }
+        .mb-4 { margin-bottom: 1rem !important; }
+        .mb-6 { margin-bottom: 1.5rem !important; }
+        
+        .p-2\.5 { padding: 0.625rem !important; }
+        .p-3 { padding: 0.75rem !important; }
+        .p-3\.5 { padding: 0.875rem !important; }
+        .p-4 { padding: 1rem !important; }
+        .p-5 { padding: 1.25rem !important; }
+        .p-6 { padding: 1.5rem !important; }
+        
+        .rounded-lg { border-radius: 0.5rem !important; }
+        .rounded-xl { border-radius: 0.75rem !important; }
+        .rounded-2xl { border-radius: 1rem !important; }
+        
+        .font-mono { font-family: 'Fira Code', monospace !important; }
+        .font-bold { font-weight: 700 !important; }
+        .font-black { font-weight: 900 !important; }
+        
+        .text-xs { font-size: 0.75rem !important; }
+        .text-sm { font-size: 0.875rem !important; }
+        .text-xl { font-size: 1.25rem !important; }
+        .text-2xl { font-size: 1.5rem !important; }
+        
+        .text-emerald-400 { color: #34d399 !important; }
+        .text-rose-400 { color: #f87171 !important; }
+        .text-amber-400 { color: #fbbf24 !important; }
+        .text-indigo-400 { color: #818cf8 !important; }
+        .text-gray-500 { color: #6b7280 !important; }
+        .text-white { color: #ffffff !important; }
+        
+        .bg-gray-950\/40 { background-color: rgba(3, 7, 18, 0.4) !important; }
+        .bg-gray-950\/80 { background-color: rgba(3, 4, 14, 0.8) !important; }
+        .bg-gray-900 { background-color: #0b0c1e !important; }
+        .bg-gray-950 { background-color: #03040e !important; }
+        .bg-amber-500\/5 { background-color: rgba(245, 158, 11, 0.05) !important; }
+        
+        .border-white\/5 { border-color: rgba(255, 255, 255, 0.05) !important; }
+        .border-white\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
+        .border-amber-500\/30 { border-color: rgba(245, 158, 11, 0.3) !important; }
+        
+        .h-11 { height: 2.75rem !important; }
+        .p-2 { padding: 0.5rem !important; }
+        .px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+        .opacity-30 { opacity: 0.3 !important; }
+        .cursor-not-allowed { cursor: not-allowed !important; }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-primary); 
+            font-family: 'Outfit', sans-serif;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            max-width: 1152px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.2);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-primary);
+        }
+        
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 10px 30px -10px rgba(0, 0, 0, 0.5), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            transition: var(--transition-smooth);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 
+                0 15px 35px -5px rgba(0, 0, 0, 0.6), 
+                0 0 25px rgba(124, 58, 237, 0.05),
+                inset 0 1px 1px rgba(255, 255, 255, 0.08);
+        }
+        
+        .btn-win-segment {
+            background: linear-gradient(135deg, var(--brand-success-dark) 0%, var(--brand-success) 100%);
+            box-shadow: 0 4px 12px var(--brand-success-glow);
+            color: white;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            transition: var(--transition-smooth);
+        }
+        
+        .btn-win-segment:active {
+            transform: scale(0.96);
+        }
+        
+        .btn-push-segment {
+            background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+            box-shadow: 0 4px 12px rgba(75, 85, 99, 0.25);
+            color: white;
+            border: 1px solid rgba(156, 163, 175, 0.25);
+            transition: var(--transition-smooth);
+        }
+        
+        .btn-push-segment:active {
+            transform: scale(0.96);
+        }
+        
+        .matchup-card {
+            background: rgba(10, 11, 26, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+        }
+        .matchup-card:hover {
+            border-color: rgba(124, 58, 237, 0.3);
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(124, 58, 237, 0.1),
+                inset 0 1px 1px rgba(255, 255, 255, 0.06);
+        }
+        
+        /* Select element styling reset override for standard styles */
+        select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em auto;
+            padding-right: 2.25rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            
+            /* Fallback dark values for select elements */
+            background-color: #0b0c1e !important;
+            color: #f3f4f6 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 0.5rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 0.75rem;
+            height: auto;
+            line-height: 1.25rem;
+        }
+        
+        select option {
+            background-color: #0b0c1e !important;
+            color: #f3f4f6 !important;
+        }
+
+        /* Layout Grid and Responsiveness variables/classes */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg, 1.5rem);
+            align-items: start;
+            width: 100% !important;
+        }
+        
+        .col-standings {
+            order: 1;
+            grid-column: span 1;
+        }
+        
+        .col-entry {
+            order: 2;
+            grid-column: span 1;
+        }
+        
+        .col-history {
+            order: 3;
+            grid-column: span 1;
+        }
+        
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+            }
+            
+            .col-standings {
+                order: 2;
+                grid-column: 9 / span 4 !important;
+                grid-row: 1 !important;
+            }
+            
+            .col-entry {
+                order: 1;
+                grid-column: 1 / span 8 !important;
+                grid-row: 1 / span 2 !important;
+            }
+            
+            .col-history {
+                order: 3;
+                grid-column: 9 / span 4 !important;
+                grid-row: 2 !important;
+                position: sticky;
+                top: 88px;
+            }
+        }
+
+        /* Slide animation classes for view transitions */
+        @keyframes slideOutUp {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-30px); }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .slide-out-up {
+            animation: slideOutUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .slide-in-up {
+            animation: slideInUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .slide-in-down {
+            animation: slideInDown 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-3 md:p-6 max-w-6xl mx-auto relative">
+
+    <!-- Ambient Glow Backgrounds -->
+    <div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute -top-[30%] -left-[20%] w-[70%] h-[60%] rounded-full bg-violet-600/10 blur-[120px]"></div>
+        <div class="absolute top-[30%] -right-[20%] w-[60%] h-[50%] rounded-full bg-emerald-500/5 blur-[120px]"></div>
+        <div class="absolute -bottom-[20%] left-[10%] w-[50%] h-[40%] rounded-full bg-indigo-500/10 blur-[120px]"></div>
+    </div>
+
+    <!-- Header Panel -->
+    <header class="flex justify-between items-center mb-6 glass-panel p-4 md:p-5 rounded-2xl sticky top-2 z-40 shadow-xl">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-400 shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-3.75-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-300 tracking-tight leading-none">Pusoy Scorekeeper</h1>
+                <p class="text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Professional Scorecard &amp; Payout Simplifier</p>
+            </div>
+        </div>
+        <div>
+            <div class="text-right bg-gray-950/40 border border-white/5 px-3.5 py-1.5 rounded-xl cursor-pointer hover:bg-gray-900/40 hover:border-white/10 transition duration-200 flex flex-col items-end shadow-inner backdrop-blur-md" onclick="toggleSettings()">
+                <span class="text-[9px] text-gray-500 font-bold uppercase tracking-wider">Unit Value</span>
+                <span class="text-xs md:text-sm font-black text-emerald-400 font-mono">$<span id="displayDollar">0.50</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="dashboardView" class="hidden">
+  <main class="dashboard-grid flex-1 mb-8">
+        
+        <!-- Standings (Top on Mobile, Top Right on Desktop) -->
+        <div class="col-standings space-y-6">
+            <!-- Current Standings -->
+            <div class="glass-panel p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500 to-teal-500"></div>
+                <h3 class="text-emerald-400 font-bold mb-4 uppercase text-xs tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 14.25c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v5.625c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875V14.25z" /></svg>
+                    <span>Current Standings</span>
+                </h3>
+                
+                <div id="standings" class="grid grid-cols-2 gap-3 mb-4"></div>
+                
+                <div class="space-y-2">
+                    <button onclick="endGameAndPay()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-extrabold py-3 rounded-xl shadow-lg hover:shadow-indigo-500/10 flex items-center justify-center gap-2 transition border border-indigo-500/20 text-xs uppercase tracking-wider">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879-.659c1.171-.879 3.07-.879 4.242 0 1.172.879 1.172 2.303 0 3.182C13.536 21.319 12.542 22 11 22v-2m1-14V4m0 2c-1.11 0-2.08.402-2.599 1M12 8c1.11 0 2.08.402 2.599 1M12 8V7" /></svg>
+                        End Game &amp; Pay
+                    </button>
+                    
+                    <button onclick="toggleSettings()" class="w-full text-[10px] text-gray-500 font-extrabold hover:text-gray-300 flex items-center justify-center gap-1.5 py-1.5 transition uppercase tracking-wider">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M13.5 4.938a7 7 0 11-9.006 1.737c.2-.026.39-.1.533-.242l.354-.354a.75.75 0 00-.287-1.27 8.502 8.502 0 1010.53 1.644.75.75 0 00-.704-1.272l-.353.353a.75.75 0 00-.288.706A7.003 7.003 0 0113.5 4.938z" clip-rule="evenodd" /><path d="M10 2a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 2z" /></svg>
+                        Manual Score Fix &amp; Rename
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Round Entry (Middle on Mobile, Left Main on Desktop) -->
+        <div class="col-entry space-y-6">
+            
+            <!-- Royalty Bonuses (Naturals) -->
+            <div class="glass-panel p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-500 to-yellow-500"></div>
+                <h3 class="text-amber-400 font-bold mb-4 uppercase text-xs tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" /></svg>
+                    <span>Royalty Bonuses (Naturals)</span>
+                </h3>
+                <div id="naturalsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+            </div>
+
+            <!-- Head-to-Head Matchups Accordions -->
+            <div id="matchupsSection" class="glass-panel p-5 rounded-2xl shadow-lg relative overflow-hidden transition-all duration-300">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-violet-500"></div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                    <h3 class="text-indigo-400 font-bold uppercase text-xs tracking-wider flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2.25a.75.75 0 01.75.75v11.59l3.72-3.72a.75.75 0 111.06 1.06l-5 5a.75.75 0 01-1.06 0l-5-5a.75.75 0 111.06-1.06l3.72 3.72V3a.75.75 0 01.75-.75z" /><path d="M4.5 16.5a.75.75 0 01.75-.75h13.5a.75.75 0 010 1.5H5.25a.75.75 0 01-.75-.75z" /><path d="M8.25 19.5a.75.75 0 01.75-.75h6a.75.75 0 010 1.5H9a.75.75 0 01-.75-.75z" /></svg>
+                        <span>H2H Comparisons</span>
+                    </h3>
+                    <div id="matchupProgress" class="text-[11px] font-semibold text-gray-500 font-mono">
+                        Progress: 0 / 18 Hands
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center gap-3 mb-4 bg-gray-950/40 p-2.5 rounded-xl border border-white/5">
+                    <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider ml-1">Expand/Collapse Matchups</span>
+                    <div class="flex gap-2.5">
+                        <button type="button" onclick="setAllMatchupsCollapsed(false)" class="text-[10px] font-extrabold text-indigo-400 hover:text-indigo-300 transition">Expand All</button>
+                        <span class="text-gray-800">|</span>
+                        <button type="button" onclick="setAllMatchupsCollapsed(true)" class="text-[10px] font-extrabold text-indigo-400 hover:text-indigo-300 transition">Collapse All</button>
+                    </div>
+                </div>
+                
+                <div id="matchupsList" class="space-y-3.5"></div>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="calculateRound()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm md:text-base rounded-2xl shadow-xl hover:shadow-emerald-500/10 transition transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-500/20 tracking-wider uppercase">
+                Calculate Round Scores
+            </button>
+
+            <!-- Auditor Card -->
+            <div id="auditor" class="hidden glass-panel border-amber-500/30 p-5 rounded-2xl shadow-2xl mt-4 relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-amber-500 animate-pulse"></div>
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/5">
+                    <h3 class="text-amber-400 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" /></svg>
+                        Audit Preview
+                    </h3>
+                    <div id="auditSum" class="text-xs font-bold px-2.5 py-1 rounded-full font-mono">Sum check: 0</div>
+                </div>
+                
+                <div id="auditGrid" class="space-y-1 mb-5"></div>
+                
+                <div class="flex justify-end items-center gap-3 pt-3 border-t border-white/5">
+                    <button onclick="document.getElementById('auditor').classList.add('hidden')" class="px-5 h-11 bg-gray-900/60 hover:bg-gray-850 hover:text-white text-gray-400 rounded-xl font-bold transition text-xs border border-white/5 flex items-center justify-center">
+                        Edit
+                    </button>
+                    <button id="btnCommit" onclick="commit()" class="px-6 h-11 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-extrabold shadow-lg transition text-xs border border-indigo-500/20 flex items-center justify-center">
+                        Save Round
+                    </button>
+                </div>
+                
+                <div id="auditError" class="hidden mt-3 text-left text-rose-400 font-bold bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-xl text-xs flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-rose-400 inline-block shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>
+                    <span id="auditErrorText">Error: Net points sum is not 0.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- History & Archives (Bottom on Mobile, Bottom Right on Desktop) -->
+        <div class="col-history space-y-6">
+            <!-- History and Archives Container -->
+            <div class="glass-panel p-5 rounded-2xl shadow-lg flex flex-col min-h-[400px]">
+                
+                <!-- Tab Headers -->
+                <div class="flex mb-4 bg-gray-950/40 p-1 rounded-2xl border border-white/5">
+                    <button onclick="switchSidebarTab('active')" id="tab_active" class="flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner">
+                        Active Log
+                    </button>
+                    <button onclick="switchSidebarTab('archives')" id="tab_archives" class="flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 text-gray-500 hover:text-gray-300">
+                        Archives
+                    </button>
+                </div>
+
+                <!-- Tab 1: Active Game Log -->
+                <div id="sidebar_active_content" class="flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Round History</span>
+                        <button onclick="setupNewGame()" class="text-[9px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-1.5 rounded-lg hover:bg-rose-500/20 hover:text-rose-300 transition font-bold uppercase tracking-wider">New Game</button>
+                    </div>
+                    
+                    <div id="history" class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[350px] custom-scrollbar">
+                        <div class="text-center text-gray-600 italic mt-20">No rounds played yet</div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Saved Archives -->
+                <div id="sidebar_archives_content" class="hidden flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Saved Matches</span>
+                        <button onclick="exportArchives()" class="text-[9px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1.5 rounded-lg hover:bg-indigo-500/20 hover:text-indigo-300 transition font-bold uppercase tracking-wider">Export JSON</button>
+                    </div>
+                    
+                    <div id="archivesList" class="flex-1 overflow-y-auto space-y-3.5 pr-1 max-h-[280px] custom-scrollbar mb-4">
+                        <div class="text-center text-gray-600 italic mt-20">No archived games</div>
+                    </div>
+                    
+                    <!-- Import Area -->
+                    <div class="border-t border-gray-850 pt-3">
+                        <label class="block text-center cursor-pointer bg-gray-950/60 border border-gray-850 hover:border-indigo-500/30 p-2.5 rounded-xl transition duration-200">
+                            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
+                                Import Backup JSON
+                            </span>
+                            <input type="file" id="importFile" class="hidden" accept=".json" onchange="importArchives(event)">
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    </div> <!-- /dashboardView -->
+
+    <!-- Modal: Setup New Game -->
+    <div id="setupModal" class="hidden fixed inset-0 bg-gray-950/80 z-[60] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar">
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 mb-2">New Game Setup</h2>
+            <p class="text-xs text-gray-500 mb-6">Enter player names and unit stake value to begin recording.</p>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 1</label>
+                    <input type="text" id="setupP1" value="Player 1" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 2</label>
+                    <input type="text" id="setupP2" value="Player 2" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 3</label>
+                    <input type="text" id="setupP3" value="Player 3" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 4</label>
+                    <input type="text" id="setupP4" value="Player 4" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Dollar Value Per Point ($)</label>
+                    <input type="number" id="setupDollar" value="0.50" step="0.10" min="0.01" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition font-mono duration-200">
+                </div>
+            </div>
+            
+            <button onclick="startGame()" class="w-full h-11 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-xl transition text-sm uppercase tracking-wider shadow-lg hover:shadow-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                Start Game
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal: Settings / Fixes -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-50 backdrop-blur-md p-4">
+        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-black text-white flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-indigo-400"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.732 6.232a.5.5 0 00-.707.707L8.793 7.7a2.5 2.5 0 010 3.536l-.768.768a.5.5 0 00.707.707l.768-.768a3.5 3.5 0 000-4.95l-.768-.768zm3.536 0a3.5 3.5 0 010 4.95l-.768.768a.5.5 0 00.707.707l.768-.768a2.5 2.5 0 000-3.536l-.768-.768a.5.5 0 00-.707.707l.768.768z" clip-rule="evenodd" /></svg>
+                    Settings &amp; Fixes
+                </h2>
+                <button onclick="toggleSettings()" class="text-gray-500 hover:text-white text-2xl transition">&times;</button>
+            </div>
+            
+            <div class="mb-5 pb-5 border-b border-white/5">
+                <label class="block text-gray-400 text-[10px] uppercase font-bold tracking-wider mb-2">Dollar Value Per Point ($)</label>
+                <input type="number" id="inpDollar" min="0.01" step="0.10" class="w-full bg-gray-950/60 border border-white/10 rounded-xl p-3 text-white text-sm font-mono focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition duration-200" onchange="updateConfig()">
+            </div>
+            
+            <div class="mb-5 pb-5 border-b border-white/5">
+                <h4 class="text-indigo-400 font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.29-.226.395-.615.222-.924l-.79-1.41a6.002 6.002 0 00-11.2 0l-.79 1.41z" /></svg>
+                    Rename Players
+                </h4>
+                <div class="space-y-2">
+                    <input type="text" id="renameP0" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(0)">
+                    <input type="text" id="renameP1" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(1)">
+                    <input type="text" id="renameP2" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(2)">
+                    <input type="text" id="renameP3" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(3)">
+                </div>
+            </div>
+            
+            <div class="bg-gray-950/40 p-4 rounded-xl border border-white/5">
+                <h4 class="text-amber-500 font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.63-1.515 2.63H4.72c-1.34 0-2.188-1.463-1.515-2.63l6.28-10.875zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                    Manual score Adjustment
+                </h4>
+                <div id="fixInputs" class="space-y-2"></div>
+                <div class="mt-3 pt-2.5 border-t border-white/5 flex justify-between items-center text-xs">
+                    <span class="text-gray-500 uppercase font-bold tracking-wider text-[10px]">Net Adjustment:</span>
+                    <span id="fixSum" class="font-bold text-emerald-400 text-sm font-mono">0</span>
+                </div>
+                <button id="btnFix" onclick="applyFix()" disabled class="w-full mt-3 h-11 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-lg text-xs disabled:opacity-30 disabled:cursor-not-allowed transition uppercase tracking-wider border border-indigo-500/20 flex items-center justify-center">Apply Fix</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Settlement -->
+    <div id="settlementModal" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-[80] backdrop-blur-md p-4">
+        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="document.getElementById('settlementModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl transition">&times;</button>
+            
+            <h2 class="text-2xl font-black text-white mb-1 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+                <span>Game Settlement</span>
+            </h2>
+            <p class="text-gray-500 text-xs mb-6">Optimized transactions (minimized debt simplification).</p>
+            
+            <div id="settlementList" class="space-y-2.5"></div>
+            
+            <div class="mt-6 pt-4 border-t border-white/5 text-center">
+                 <button onclick="document.getElementById('settlementModal').classList.add('hidden')" class="bg-gray-950/60 hover:bg-gray-850 hover:text-white text-white border border-white/5 px-8 h-11 rounded-xl font-bold transition text-xs uppercase tracking-wider flex items-center justify-center mx-auto">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const BONUSES = {
+            'top': { none: 0, trips: 3 },
+            'mid': { none: 0, full: 2, quads: 8, stfl: 10, royal: 20 },
+            'bot': { none: 0, quads: 4, stfl: 5, royal: 10 }
+        };
+        const NATURALS = { none: 0, dragon: 13, pairs6: 3, str3: 3, flush3: 3 };
+        const STORAGE_KEYS = {
+            ACTIVE_GAME: 'pusoy_active_game_state',
+            ARCHIVES: 'pusoy_game_archives_list'
+        };
+        function getShortName(name, idx) {
+            if (!name) return "";
+            if (name.toLowerCase().startsWith("player ") || name === `Player ${idx + 1}`) {
+                return `P${idx + 1}`;
+            }
+            return name.split(' ')[0];
+        }
+
+        // --- STATE ---
+        let PLAYERS = ["Player 1", "Player 2", "Player 3", "Player 4"];
+        let unitVal = 0.50;
+        let scores = [0, 0, 0, 0];
+        let historyLog = [];
+        let activeGameSessionId = null;
+
+        // Current round's input state
+        let roundState = {
+            naturals: ["none", "none", "none", "none"],
+            matchups: {}
+        };
+
+        // --- INITIALIZE ROUND STATE ---
+        function initRoundState() {
+            roundState = {
+                naturals: ["none", "none", "none", "none"],
+                matchups: {}
+            };
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    roundState.matchups[`${i}_${j}`] = {
+                        top: null,
+                        mid: null,
+                        bot: null,
+                        top_bon: "none",
+                        mid_bon: "none",
+                        bot_bon: "none",
+                        collapsed: true
+                    };
+                }
+            }
+        }
+
+        // --- HELPERS & VALIDATION ---
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function validateRoundState(rs) {
+            if (!rs || typeof rs !== 'object') return false;
+            if (!Array.isArray(rs.naturals) || rs.naturals.length !== 4) return false;
+            const validNats = ['none', 'dragon', 'pairs6', 'str3', 'flush3'];
+            if (!rs.naturals.every(n => validNats.includes(n))) return false;
+            if (!rs.matchups || typeof rs.matchups !== 'object') return false;
+            
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    const key = `${i}_${j}`;
+                    const m = rs.matchups[key];
+                    if (!m || typeof m !== 'object') return false;
+                    const validWinners = [null, 0, 1, 2, 3, -1];
+                    if (!validWinners.includes(m.top) || !validWinners.includes(m.mid) || !validWinners.includes(m.bot)) return false;
+                    if (typeof m.top_bon !== 'string' || typeof m.mid_bon !== 'string' || typeof m.bot_bon !== 'string') return false;
+                    if (typeof m.collapsed !== 'boolean') return false;
+                }
+            }
+            return true;
+        }
+
+        function isValidHistoryRecord(r) {
+            if (!r || typeof r !== 'object') return false;
+            if (r.type !== 'round' && r.type !== 'fix') return false;
+            if (typeof r.timestamp !== 'string') return false;
+            if (!Array.isArray(r.pointsChange) || r.pointsChange.length !== 4) return false;
+            if (!r.pointsChange.every(s => typeof s === 'number' && !isNaN(s))) return false;
+            if (r.type === 'round') {
+                if (r.naturals) {
+                    if (!Array.isArray(r.naturals) || r.naturals.length !== 4) return false;
+                    if (!r.naturals.every(n => typeof n === 'string')) return false;
+                }
+            }
+            return true;
+        }
+
+        function isValidActiveGame(a) {
+            if (!a || typeof a !== 'object') return false;
+            if (!Array.isArray(a.PLAYERS) || a.PLAYERS.length !== 4) return false;
+            if (!a.PLAYERS.every(p => typeof p === 'string')) return false;
+            if (!Array.isArray(a.scores) || a.scores.length !== 4) return false;
+            if (!a.scores.every(s => typeof s === 'number' && !isNaN(s))) return false;
+            if (typeof a.unitVal !== 'number' || isNaN(a.unitVal) || a.unitVal <= 0) return false;
+            if (!Array.isArray(a.historyLog) || !a.historyLog.every(isValidHistoryRecord)) return false;
+            if (a.roundState && !validateRoundState(a.roundState)) return false;
+            if (a.activeGameSessionId !== undefined && a.activeGameSessionId !== null && typeof a.activeGameSessionId !== 'string') return false;
+            return true;
+        }
+
+        function isValidArchiveGame(g) {
+            if (!g || typeof g !== 'object') return false;
+            if (typeof g.id !== 'string') return false;
+            if (typeof g.date !== 'string') return false;
+            if (!Array.isArray(g.players) || g.players.length !== 4) return false;
+            if (!g.players.every(p => typeof p === 'string')) return false;
+            if (!Array.isArray(g.scores) || g.scores.length !== 4) return false;
+            if (!g.scores.every(s => typeof s === 'number' && !isNaN(s))) return false;
+            if (typeof g.unitVal !== 'number' || isNaN(g.unitVal) || g.unitVal <= 0) return false;
+            if (typeof g.roundsCount !== 'number' || isNaN(g.roundsCount)) return false;
+            if (!Array.isArray(g.historyLog) || !g.historyLog.every(isValidHistoryRecord)) return false;
+            if (typeof g.isFinished !== 'boolean') return false;
+            return true;
+        }
+
+        // --- STORAGE MANAGER ---
+        function saveActiveGame() {
+            const data = {
+                PLAYERS,
+                scores,
+                historyLog,
+                unitVal,
+                roundState,
+                activeGameSessionId
+            };
+            localStorage.setItem(STORAGE_KEYS.ACTIVE_GAME, JSON.stringify(data));
+        }
+
+        function loadActiveGame() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEYS.ACTIVE_GAME);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (!data || !isValidActiveGame(data)) return false;
+                
+                PLAYERS = data.PLAYERS;
+                scores = data.scores;
+                historyLog = data.historyLog || [];
+                unitVal = data.unitVal;
+                activeGameSessionId = data.activeGameSessionId || 'game_' + Date.now();
+                if (data.roundState && validateRoundState(data.roundState)) {
+                    roundState = data.roundState;
+                } else {
+                    initRoundState();
+                }
+                return true;
+            } catch(e) {
+                console.error("Failed to load active game", e);
+                return false;
+            }
+        }
+
+        function getArchives() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEYS.ARCHIVES);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) return [];
+                return parsed.filter(isValidArchiveGame);
+            } catch(e) {
+                console.error("Failed to load archives", e);
+                return [];
+            }
+        }
+
+        function saveArchives(archives) {
+            localStorage.setItem(STORAGE_KEYS.ARCHIVES, JSON.stringify(archives));
+        }
+
+        function archiveCurrentGame(isFinished = true) {
+            const archives = getArchives();
+            let idGenerated = false;
+            if (!activeGameSessionId) {
+                activeGameSessionId = 'game_' + Date.now();
+                idGenerated = true;
+            }
+            
+            const existingIndex = archives.findIndex(g => g.id === activeGameSessionId);
+            
+            if (historyLog.length === 0) {
+                if (existingIndex >= 0) {
+                    archives.splice(existingIndex, 1);
+                    saveArchives(archives);
+                }
+                return;
+            }
+            
+            const gameRecord = {
+                id: activeGameSessionId,
+                date: new Date().toISOString(),
+                players: [...PLAYERS],
+                scores: [...scores],
+                unitVal: unitVal,
+                roundsCount: historyLog.length,
+                historyLog: [...historyLog],
+                isFinished: isFinished
+            };
+            
+            if (existingIndex >= 0) {
+                archives[existingIndex] = gameRecord;
+            } else {
+                archives.unshift(gameRecord);
+            }
+            
+            saveArchives(archives);
+            if (idGenerated) {
+                saveActiveGame();
+            }
+        }
+
+        // --- GAME ACTIONS ---
+        function startGame() {
+            const p1 = document.getElementById('setupP1').value.trim() || "Player 1";
+            const p2 = document.getElementById('setupP2').value.trim() || "Player 2";
+            const p3 = document.getElementById('setupP3').value.trim() || "Player 3";
+            const p4 = document.getElementById('setupP4').value.trim() || "Player 4";
+
+            PLAYERS = [p1, p2, p3, p4];
+
+            let val = parseFloat(document.getElementById('setupDollar').value);
+            if (isNaN(val) || val <= 0) {
+                showToast("Invalid unit value, defaulting to $0.50", "warning");
+                val = 0.50;
+            }
+            unitVal = val;
+
+            scores = [0, 0, 0, 0];
+            historyLog = [];
+            activeGameSessionId = 'game_' + Date.now();
+
+            initRoundState();
+            saveActiveGame();
+            syncSettingsInputs();
+
+            // Slide out the setup modal
+            const modal = document.getElementById('setupModal');
+            modal.classList.add('slide-out-up');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('slide-out-up');
+            }, 350);
+
+            // Reveal dashboard with slide-in animation
+            const dashboard = document.getElementById('dashboardView');
+            dashboard.classList.remove('hidden');
+            dashboard.classList.add('slide-in-up');
+            setTimeout(() => {
+                dashboard.classList.remove('slide-in-up');
+            }, 450);
+
+            init();
+            renderHistory();
+
+            showToast("New game session started!");
+        }
+
+        function setupNewGame() {
+            if (confirm("Clear current active game and start a new session? (Past sessions are saved in Archives)")) {
+                if (historyLog.length > 0) {
+                    archiveCurrentGame(false);
+                }
+                
+                localStorage.removeItem(STORAGE_KEYS.ACTIVE_GAME);
+                activeGameSessionId = null;
+                PLAYERS = ["Player 1", "Player 2", "Player 3", "Player 4"];
+                scores = [0, 0, 0, 0];
+                historyLog = [];
+                unitVal = 0.50;
+                initRoundState();
+                
+                // Slide out dashboard, slide in setup modal
+                const dashboard = document.getElementById('dashboardView');
+                dashboard.classList.add('slide-out-up');
+                setTimeout(() => {
+                    dashboard.classList.add('hidden');
+                    dashboard.classList.remove('slide-out-up');
+                }, 350);
+
+                const modal = document.getElementById('setupModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('slide-in-down');
+                setTimeout(() => {
+                    modal.classList.remove('slide-in-down');
+                }, 450);
+
+                document.getElementById('setupP1').value = PLAYERS[0];
+                document.getElementById('setupP2').value = PLAYERS[1];
+                document.getElementById('setupP3').value = PLAYERS[2];
+                document.getElementById('setupP4').value = PLAYERS[3];
+                document.getElementById('setupDollar').value = unitVal;
+            }
+        }
+
+        function syncSettingsInputs() {
+            document.getElementById('inpDollar').value = unitVal;
+            for(let i = 0; i < 4; i++) {
+                document.getElementById(`renameP${i}`).value = PLAYERS[i];
+            }
+        }
+
+        function init() {
+            document.getElementById('displayDollar').innerText = unitVal.toFixed(2);
+            renderNaturals();
+            renderMatchups();
+            renderStandings();
+            renderFix();
+            checkNaturals();
+            updateProgressIndicator();
+        }
+
+        // --- RENDERERS ---
+        function renderNaturals() {
+            const div = document.getElementById('naturalsList'); 
+            if (!div) return;
+            div.innerHTML = '';
+            
+            const labels = {
+                none: 'No Natural', 
+                dragon: 'Dragon (+13)', 
+                pairs6: '6 Pairs (+3)', 
+                str3: '3 Straight (+3)', 
+                flush3: '3 Flush (+3)'
+            };
+            
+            PLAYERS.forEach((p, i) => {
+                let options = Object.keys(NATURALS).map(k => {
+                    const isSel = roundState.naturals[i] === k ? 'selected' : '';
+                    return `<option value="${k}" ${isSel}>${labels[k]}</option>`;
+                }).join('');
+                
+                const hasNat = roundState.naturals[i] !== 'none';
+                const cardClass = hasNat ? 'border-amber-500/50 bg-amber-500/5' : 'border-gray-800 bg-gray-950/40';
+                
+                div.innerHTML += `
+                    <div id="natural_card_${i}" class="flex justify-between items-center p-3 rounded-xl border transition duration-200 ${cardClass}">
+                        <span class="text-xs font-bold text-gray-300 w-1/3 truncate">${escapeHTML(p)}</span>
+                        <select onchange="selectNatural(${i}, this.value)" class="bg-gray-900 border border-gray-850 rounded-lg text-xs p-2 text-white w-2/3 focus:outline-none focus:border-amber-500 font-medium">
+                            ${options}
+                        </select>
+                    </div>
+                `;
+            });
+        }
+        function getHandRowHTML(i, j, hand) {
+            const key = `${i}_${j}`;
+            const state = roundState.matchups[key][hand];
+            const bonus = roundState.matchups[key][`${hand}_bon`];
+            
+            const isLeftActive = (state === i);
+            const isPushActive = (state === -1);
+            const isRightActive = (state === j);
+            
+            const leftClass = isLeftActive ? 'btn-win-segment' : 'bg-gray-900/60 text-gray-400 hover:bg-gray-800 hover:text-white border border-white/5';
+            const pushClass = isPushActive ? 'btn-push-segment' : 'bg-gray-900/60 text-gray-400 hover:bg-gray-800 hover:text-white border border-white/5';
+            const rightClass = isRightActive ? 'btn-win-segment' : 'bg-gray-900/60 text-gray-400 hover:bg-gray-800 hover:text-white border border-white/5';
+            
+            const bonuses = BONUSES[hand];
+            let selectOpts = `<option value="none">Bonus?</option>`;
+            for (const [k, v] of Object.entries(bonuses)) {
+                if (k === 'none') continue;
+                selectOpts += `<option value="${k}" ${bonus === k ? 'selected' : ''}>+${v} ${k.toUpperCase()}</option>`;
+            }
+            
+            const selectDisabled = (state === -1 || state === null);
+            const selectStyle = selectDisabled ? 'opacity-30 cursor-not-allowed border-white/5 text-gray-600' : 'border-amber-500/30 text-amber-400 bg-amber-500/5 focus:border-amber-500';
+            
+            return `
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-3.5 last:mb-0 pb-3 sm:pb-0 border-b border-white/5 sm:border-b-0 last:border-b-0">
+                    <div class="flex justify-between items-center sm:w-10">
+                        <span class="text-[10px] sm:text-[9px] text-gray-500 font-extrabold uppercase tracking-wider">${hand}</span>
+                        <div class="sm:hidden">
+                            <select onchange="selectBonus(${i}, ${j}, '${hand}', this.value)" ${selectDisabled ? 'disabled' : ''} class="w-24 h-11 text-[10px] font-extrabold bg-gray-900 border border-white/5 rounded-xl px-2 text-center focus:outline-none transition duration-200 ${selectStyle}">
+                                ${selectOpts}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex-1 flex bg-gray-950/80 rounded-xl p-1 border border-white/5 gap-1.5">
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${i})" class="flex-1 h-11 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${leftClass}">
+                            ${escapeHTML(getShortName(PLAYERS[i], i))}
+                        </button>
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', -1)" class="w-12 h-11 text-xs rounded-lg transition duration-200 font-bold flex items-center justify-center ${pushClass}">
+                            Push
+                        </button>
+                        <button type="button" onclick="selectWinner(${i}, ${j}, '${hand}', ${j})" class="flex-1 h-11 text-xs rounded-lg transition duration-200 font-bold truncate px-1.5 flex items-center justify-center ${rightClass}">
+                            ${escapeHTML(getShortName(PLAYERS[j], j))}
+                        </button>
+                    </div>
+                    <div class="hidden sm:block">
+                        <select onchange="selectBonus(${i}, ${j}, '${hand}', this.value)" ${selectDisabled ? 'disabled' : ''} class="w-24 h-11 text-[10px] font-extrabold bg-gray-900 border border-white/5 rounded-xl px-2 text-center focus:outline-none transition duration-200 ${selectStyle}">
+                            ${selectOpts}
+                        </select>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMatchups() {
+            const div = document.getElementById('matchupsList'); 
+            if (!div) return;
+            div.innerHTML = '';
+            
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    const key = `${i}_${j}`;
+                    div.innerHTML += `
+                        <div id="matchup_card_${key}" class="matchup-card rounded-2xl shadow-md">
+                        </div>
+                    `;
+                    renderMatchupCard(i, j);
+                }
+            }
+        }
+        function renderMatchupCard(i, j) {
+            const key = `${i}_${j}`;
+            const cardEl = document.getElementById(`matchup_card_${key}`);
+            if (!cardEl) return;
+            
+            const state = roundState.matchups[key];
+            const collapsed = state.collapsed;
+            
+            let summaryText = "Pending";
+            let summaryClass = "bg-gray-900/60 text-gray-500 border border-gray-850";
+            
+            const hasNatI = roundState.naturals[i] !== 'none';
+            const hasNatJ = roundState.naturals[j] !== 'none';
+            
+            if (hasNatI || hasNatJ) {
+                const valI = NATURALS[roundState.naturals[i]];
+                const valJ = NATURALS[roundState.naturals[j]];
+                
+                if (valI > valJ) {
+                    const diff = valI - valJ;
+                    summaryText = `${escapeHTML(getShortName(PLAYERS[i], i))} +${diff} (Nat)`;
+                    summaryClass = "bg-amber-500/15 text-amber-400 border border-amber-500/25";
+                } else if (valJ > valI) {
+                    const diff = valJ - valI;
+                    summaryText = `${escapeHTML(getShortName(PLAYERS[j], j))} +${diff} (Nat)`;
+                    summaryClass = "bg-amber-500/15 text-amber-400 border border-amber-500/25";
+                } else {
+                    summaryText = "Push (Nat)";
+                    summaryClass = "bg-gray-800 text-gray-300 border border-gray-700";
+                }
+                
+                let headerHTML = `
+                    <div class="flex justify-between items-center p-3.5 select-none opacity-60">
+                        <div class="flex items-center gap-2.5 w-2/3 truncate">
+                            <span class="font-bold text-xs md:text-sm text-gray-400 truncate">${escapeHTML(PLAYERS[i])}</span>
+                            <span class="text-[9px] text-gray-600 font-extrabold uppercase tracking-widest">vs</span>
+                            <span class="font-bold text-xs md:text-sm text-gray-400 truncate">${escapeHTML(PLAYERS[j])}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full ${summaryClass}">
+                                ${summaryText}
+                            </span>
+                        </div>
+                    </div>
+                `;
+                cardEl.innerHTML = headerHTML;
+                return;
+            }
+            
+            if (state.top !== null && state.mid !== null && state.bot !== null) {
+                let ptsI = 0;
+                let ptsJ = 0;
+                let wI = 0;
+                let wJ = 0;
+                
+                ['top', 'mid', 'bot'].forEach(hand => {
+                    const w = state[hand];
+                    const bKey = state[`${hand}_bon`];
+                    const bVal = BONUSES[hand][bKey] || 0;
+                    if (w === i) {
+                        wI++; ptsI++; ptsJ--;
+                        ptsI += bVal; ptsJ -= bVal;
+                    } else if (w === j) {
+                        wJ++; ptsJ++; ptsI--;
+                        ptsJ += bVal; ptsI -= bVal;
+                    }
+                });
+                
+                if (wI === 3) { ptsI += 3; ptsJ -= 3; }
+                if (wJ === 3) { ptsJ += 3; ptsI -= 3; }
+                
+                if (ptsI > 0) {
+                    summaryText = `${escapeHTML(getShortName(PLAYERS[i], i))} +${ptsI}`;
+                    summaryClass = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25";
+                } else if (ptsJ > 0) {
+                    summaryText = `${escapeHTML(getShortName(PLAYERS[j], j))} +${ptsJ}`;
+                    summaryClass = "bg-rose-500/10 text-rose-400 border border-rose-500/25";
+                } else {
+                    summaryText = "Push";
+                    summaryClass = "bg-gray-800 text-gray-300 border border-gray-700";
+                }
+            }
+            
+            let headerHTML = `
+                <div class="flex justify-between items-center cursor-pointer p-3.5 select-none" onclick="toggleMatchupCollapse(${i}, ${j})">
+                    <div class="flex items-center gap-2.5 w-2/3 truncate">
+                        <span class="font-bold text-xs md:text-sm text-gray-200 truncate">${escapeHTML(PLAYERS[i])}</span>
+                        <span class="text-[9px] text-gray-500 font-extrabold uppercase tracking-widest">vs</span>
+                        <span class="font-bold text-xs md:text-sm text-gray-200 truncate">${escapeHTML(PLAYERS[j])}</span>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full ${summaryClass}">
+                            ${summaryText}
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="matchup-arrow w-4 h-4 text-gray-500 transform transition-transform duration-300 ${collapsed ? '' : 'rotate-180'}">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            `;
+            
+            const bodyStyle = collapsed
+                ? 'max-height: 0px; opacity: 0; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);'
+                : 'max-height: none; opacity: 1; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);';
+            
+            let bodyHTML = `
+                <div class="matchup-body px-3.5 pb-4 pt-1.5 border-t border-white/5" style="${bodyStyle}">
+                    ${getHandRowHTML(i, j, 'top')}
+                    ${getHandRowHTML(i, j, 'mid')}
+                    ${getHandRowHTML(i, j, 'bot')}
+                </div>
+            `;
+            
+            cardEl.innerHTML = headerHTML + bodyHTML;
+        }
+
+        function renderStandings() {
+            const div = document.getElementById('standings'); 
+            if (!div) return;
+            div.innerHTML = '';
+            
+            // Find leader and loser for highlights
+            let maxScore = Math.max(...scores);
+            let minScore = Math.min(...scores);
+            
+            PLAYERS.forEach((p, i) => {
+                const s = scores[i];
+                const absoluteCash = Math.abs(s * unitVal).toFixed(2);
+                const cashText = s > 0 ? `+$${absoluteCash}` : (s < 0 ? `-$${absoluteCash}` : `$0.00`);
+                
+                let highlightClass = 'border-white/5 bg-gray-950/20';
+                let crown = '';
+                
+                if (scores.some(x => x !== 0)) {
+                    if (s === maxScore && maxScore > 0) {
+                        highlightClass = 'border-emerald-500/30 bg-emerald-500/5 shadow-inner shadow-emerald-950/20';
+                        crown = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-amber-400 inline-block shrink-0"><path d="M2 4l3 8h14l3-8-7 4-3-8-3 8z"/><path d="M5 20h14"/></svg> `;
+                    } else if (s === minScore && minScore < 0) {
+                        highlightClass = 'border-rose-500/30 bg-rose-500/5';
+                    }
+                }
+                
+                const scoreColor = s > 0 ? 'text-emerald-400' : (s < 0 ? 'text-rose-400' : 'text-gray-500');
+                const sign = s > 0 ? '+' : '';
+                
+                div.innerHTML += `
+                    <div class="p-3.5 rounded-xl border text-center transition duration-200 flex flex-col justify-between ${highlightClass}">
+                        <div class="text-[11px] font-bold text-gray-300 mb-1.5 truncate flex items-center justify-center gap-0.5">
+                            <span>${crown}${escapeHTML(p)}</span>
+                        </div>
+                        <div class="text-xl md:text-2xl font-black ${scoreColor} leading-none tracking-tight">${sign}${s}</div>
+                        <div class="text-[9px] text-amber-500 font-extrabold font-mono mt-2 bg-amber-500/10 px-2 py-0.5 rounded-full inline-block mx-auto border border-amber-500/20">${cashText}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- INTERACTION CONTROLLERS ---
+        function selectWinner(i, j, hand, winner) {
+            const key = `${i}_${j}`;
+            roundState.matchups[key][hand] = winner;
+            if (winner === -1) {
+                roundState.matchups[key][`${hand}_bon`] = 'none';
+            }
+            renderMatchupCard(i, j);
+            saveActiveGame();
+            updateProgressIndicator();
+        }
+
+        function selectBonus(i, j, hand, val) {
+            const key = `${i}_${j}`;
+            roundState.matchups[key][`${hand}_bon`] = val;
+            renderMatchupCard(i, j);
+            saveActiveGame();
+        }
+
+        function toggleMatchupCollapse(i, j) {
+            const key = `${i}_${j}`;
+            const state = roundState.matchups[key];
+            state.collapsed = !state.collapsed;
+            saveActiveGame();
+            
+            const cardEl = document.getElementById(`matchup_card_${key}`);
+            if (cardEl) {
+                const bodyEl = cardEl.querySelector('.matchup-body');
+                const arrowEl = cardEl.querySelector('.matchup-arrow');
+                if (bodyEl && arrowEl) {
+                    if (state.collapsed) {
+                        bodyEl.style.maxHeight = bodyEl.scrollHeight + 'px';
+                        bodyEl.offsetHeight; // force reflow
+                        bodyEl.style.maxHeight = '0px';
+                        bodyEl.style.opacity = '0';
+                        arrowEl.classList.remove('rotate-180');
+                    } else {
+                        bodyEl.style.maxHeight = bodyEl.scrollHeight + 'px';
+                        bodyEl.style.opacity = '1';
+                        arrowEl.classList.add('rotate-180');
+                        setTimeout(() => {
+                            if (!state.collapsed) {
+                                bodyEl.style.maxHeight = 'none';
+                            }
+                        }, 300);
+                    }
+                }
+            }
+        }
+
+        function setAllMatchupsCollapsed(collapsed) {
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    const key = `${i}_${j}`;
+                    roundState.matchups[key].collapsed = collapsed;
+                    
+                    const cardEl = document.getElementById(`matchup_card_${key}`);
+                    if (cardEl) {
+                        const bodyEl = cardEl.querySelector('.matchup-body');
+                        const arrowEl = cardEl.querySelector('.matchup-arrow');
+                        if (bodyEl && arrowEl) {
+                            if (collapsed) {
+                                if (bodyEl.style.maxHeight !== '0px') {
+                                    bodyEl.style.maxHeight = bodyEl.scrollHeight + 'px';
+                                    bodyEl.offsetHeight; // force reflow
+                                    bodyEl.style.maxHeight = '0px';
+                                    bodyEl.style.opacity = '0';
+                                }
+                                arrowEl.classList.remove('rotate-180');
+                            } else {
+                                bodyEl.style.maxHeight = bodyEl.scrollHeight + 'px';
+                                bodyEl.style.opacity = '1';
+                                arrowEl.classList.add('rotate-180');
+                                setTimeout(() => {
+                                    if (!roundState.matchups[key].collapsed) {
+                                        bodyEl.style.maxHeight = 'none';
+                                    }
+                                }, 300);
+                            }
+                        }
+                    }
+                }
+            }
+            saveActiveGame();
+        }
+
+        function selectNatural(idx, val) {
+            roundState.naturals[idx] = val;
+            
+            const cardEl = document.getElementById(`natural_card_${idx}`);
+            if (cardEl) {
+                if (val !== 'none') {
+                    cardEl.className = 'flex justify-between items-center p-3 rounded-xl border transition duration-200 border-amber-500/50 bg-amber-500/5';
+                } else {
+                    cardEl.className = 'flex justify-between items-center p-3 rounded-xl border transition duration-200 border-gray-800 bg-gray-950/40';
+                }
+            }
+            
+            checkNaturals();
+            saveActiveGame();
+        }
+
+        function checkNaturals() {
+            let hasNatural = roundState.naturals.some(n => n !== 'none');
+            const containerEl = document.getElementById('matchupsSection');
+            
+            if (hasNatural) {
+                if (containerEl) containerEl.classList.add('border-amber-500/20');
+            } else {
+                if (containerEl) containerEl.classList.remove('border-amber-500/20');
+            }
+            
+            renderMatchups();
+            updateProgressIndicator();
+        }
+
+        function updateProgressIndicator() {
+            let configured = 0;
+            let total = 0;
+            const indicatorEl = document.getElementById('matchupProgress');
+            if (!indicatorEl) return;
+            
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    const hasNatI = roundState.naturals[i] !== 'none';
+                    const hasNatJ = roundState.naturals[j] !== 'none';
+                    
+                    total += 3;
+                    if (hasNatI || hasNatJ) {
+                        configured += 3;
+                    } else {
+                        const m = roundState.matchups[`${i}_${j}`];
+                        if (m.top !== null) configured++;
+                        if (m.mid !== null) configured++;
+                        if (m.bot !== null) configured++;
+                    }
+                }
+            }
+            
+            let hasNatural = roundState.naturals.some(n => n !== 'none');
+            
+            if (configured === total) {
+                if (hasNatural) {
+                    indicatorEl.innerHTML = `
+                        <span class="text-amber-400 font-extrabold flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full text-[9px] uppercase tracking-wider">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.1-.114 4.713c-.02.83.843 1.457 1.545 1.002L10 15.68l4.156 2.45c.702.455 1.564-.173 1.545-1.002l-.114-4.713 3.6-3.1c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" /></svg>
+                            Ready to calculate (Naturals active)
+                        </span>`;
+                } else {
+                    indicatorEl.innerHTML = `
+                        <span class="text-emerald-400 font-extrabold flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[9px] uppercase tracking-wider">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.8-11.2a.75.75 0 00-1.06-1.06L9 9.38 7.26 7.64a.75.75 0 00-1.06 1.06l2.28 2.28a.75.75 0 001.06 0l4.3-4.3z" clip-rule="evenodd" /></svg>
+                            Ready to calculate
+                        </span>`;
+                }
+            } else {
+                if (hasNatural) {
+                    indicatorEl.innerHTML = `
+                        <span class="text-amber-400 font-bold bg-amber-400/5 border border-amber-400/20 px-2.5 py-0.5 rounded-full text-[9px] uppercase tracking-wider">
+                            Progress: ${configured} / ${total} Hands (Naturals active)
+                        </span>`;
+                } else {
+                    indicatorEl.innerHTML = `
+                        <span class="text-gray-400 font-bold bg-gray-900 border border-gray-850 px-2.5 py-0.5 rounded-full text-[9px] uppercase tracking-wider">
+                            Progress: ${configured} / ${total} Hands
+                        </span>`;
+                }
+            }
+        }
+
+        // --- MATH: ROBUST CENTS GENERATOR ---
+        function getCentsFromScores(scoreArr, dollarValue) {
+            let rawCents = scoreArr.map(s => s * dollarValue * 100);
+            let cents = rawCents.map(c => Math.round(c));
+            let sum = cents.reduce((a, b) => a + b, 0);
+            
+            if (sum !== 0) {
+                let errors = rawCents.map((rc, idx) => ({ idx, err: cents[idx] - rc }));
+                errors.sort((a, b) => b.err - a.err); // Descending error
+                
+                if (sum > 0) {
+                    for (let i = 0; i < sum; i++) {
+                        cents[errors[i].idx]--;
+                    }
+                } else if (sum < 0) {
+                    for (let i = 0; i < -sum; i++) {
+                        cents[errors[errors.length - 1 - i].idx]++;
+                    }
+                }
+            }
+            return cents;
+        }
+
+        // --- CALCULATION ENGINE ---
+        let tempScores = [0, 0, 0, 0];
+
+        function calculateRound() {
+            tempScores = [0, 0, 0, 0];
+            
+            // Check which matchups are required
+            let incomplete = false;
+            
+            for (let i = 0; i < 4; i++) {
+                for (let j = i + 1; j < 4; j++) {
+                    const hasNatI = roundState.naturals[i] !== 'none';
+                    const hasNatJ = roundState.naturals[j] !== 'none';
+                    
+                    if (hasNatI || hasNatJ) {
+                        // Settle Natural
+                        const valI = NATURALS[roundState.naturals[i]];
+                        const valJ = NATURALS[roundState.naturals[j]];
+                        
+                        if (valI > valJ) {
+                            const diff = valI - valJ;
+                            tempScores[i] += diff;
+                            tempScores[j] -= diff;
+                        } else if (valJ > valI) {
+                            const diff = valJ - valI;
+                            tempScores[j] += diff;
+                            tempScores[i] -= diff;
+                        }
+                        // If equal, 0 points.
+                    } else {
+                        // H2H comparison
+                        const m = roundState.matchups[`${i}_${j}`];
+                        if (m.top === null || m.mid === null || m.bot === null) {
+                            incomplete = true;
+                        } else {
+                            let wI = 0;
+                            let wJ = 0;
+                            
+                            ['top', 'mid', 'bot'].forEach(hand => {
+                                const w = m[hand];
+                                const bKey = m[`${hand}_bon`];
+                                const bVal = BONUSES[hand][bKey] || 0;
+                                
+                                if (w === i) {
+                                    wI++; tempScores[i]++; tempScores[j]--;
+                                    if (bVal > 0) { tempScores[i] += bVal; tempScores[j] -= bVal; }
+                                } else if (w === j) {
+                                    wJ++; tempScores[j]++; tempScores[i]--;
+                                    if (bVal > 0) { tempScores[j] += bVal; tempScores[i] -= bVal; }
+                                }
+                            });
+                            
+                            // Scoop bonus
+                            if (wI === 3) { tempScores[i] += 3; tempScores[j] -= 3; }
+                            if (wJ === 3) { tempScores[j] += 3; tempScores[i] -= 3; }
+                        }
+                    }
+                }
+            }
+            
+            if (incomplete) {
+                showToast("Please enter results for all active H2H matchups first!", "warning");
+                return;
+            }
+            
+            const sum = tempScores.reduce((a, b) => a + b, 0);
+            
+            // Render audit preview
+            const grid = document.getElementById('auditGrid');
+            if (grid) {
+                grid.innerHTML = '';
+                PLAYERS.forEach((name, i) => {
+                    const s = tempScores[i];
+                    const absoluteCash = Math.abs(s * unitVal).toFixed(2);
+                    const cashText = s > 0 ? `(+$${absoluteCash})` : (s < 0 ? `(-$${absoluteCash})` : `($0.00)`);
+                    const isPos = s > 0;
+                    const isNeg = s < 0;
+                    const cClass = isPos ? 'text-emerald-400 font-black' : (isNeg ? 'text-rose-400 font-black' : 'text-gray-500');
+                    const sign = isPos ? '+' : '';
+                    
+                    grid.innerHTML += `
+                        <div class="flex justify-between items-center py-2.5 border-b border-gray-900 last:border-b-0 font-mono text-xs">
+                            <span class="text-gray-300 font-sans font-medium truncate w-1/2">${escapeHTML(name)}</span>
+                            <div class="text-right">
+                                <span class="${cClass}">${sign}${s} pts</span>
+                                <span class="text-gray-500 ml-1.5 font-bold">${cashText}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            const sumEl = document.getElementById('auditSum');
+            if (sumEl) {
+                sumEl.innerText = `Sum Check: ${sum}`;
+                if (sum === 0) {
+                    sumEl.className = "text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider";
+                } else {
+                    sumEl.className = "text-[10px] font-extrabold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider";
+                }
+            }
+            
+            const auditor = document.getElementById('auditor');
+            if (auditor) {
+                auditor.classList.remove('hidden');
+                auditor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+            
+            document.getElementById('btnCommit').disabled = (sum !== 0);
+            document.getElementById('auditError').classList.toggle('hidden', sum === 0);
+            if (sum !== 0) {
+                document.getElementById('auditErrorText').innerText = `Audit Error: System points sum is ${sum} (must be 0). Check pushes/royalty inputs.`;
+            }
+        }
+
+        function commit() {
+            scores = scores.map((s, i) => s + tempScores[i]);
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const roundRecord = {
+                type: 'round',
+                timestamp: time,
+                pointsChange: [...tempScores],
+                naturals: [...roundState.naturals]
+            };
+            
+            historyLog.unshift(roundRecord);
+            
+            saveActiveGame();
+            archiveCurrentGame(false);
+            
+            initRoundState();
+            document.getElementById('auditor').classList.add('hidden');
+            
+            init();
+            renderHistory();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("Round saved & Standing updated!");
+        }
+
+        // --- UNDO CONTROLLER ---
+        function undoLastRound() {
+            if (historyLog.length === 0) return;
+            
+            if (confirm("Delete the last round and revert the standings?")) {
+                const last = historyLog.shift();
+                scores = scores.map((s, i) => s - last.pointsChange[i]);
+                
+                saveActiveGame();
+                archiveCurrentGame(false);
+                
+                renderStandings();
+                renderHistory();
+                renderFix();
+                showToast("Last round reverted!", "warning");
+            }
+        }
+
+        // --- HISTORY RENDERER ---
+        function renderHistory() {
+            const container = document.getElementById('history');
+            if (!container) return;
+            
+            if (historyLog.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 italic mt-20 flex flex-col items-center justify-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-gray-650"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                        No rounds played yet.
+                    </div>`;
+                return;
+            }
+            
+            let html = '';
+            historyLog.forEach((item, idx) => {
+                const isLatest = (idx === 0);
+                const isFix = (item.type === 'fix');
+                
+                let scoresHTML = item.pointsChange.map((s, pIdx) => {
+                    const name = PLAYERS[pIdx].substring(0, 3);
+                    const color = s > 0 ? 'text-emerald-400 font-bold' : (s < 0 ? 'text-rose-400 font-bold' : 'text-gray-500');
+                    const sign = s > 0 ? '+' : '';
+                    return `
+                        <span class="px-2 py-1 rounded bg-gray-950/65 border border-white/5 text-[10px] font-mono leading-none">
+                            <span class="text-gray-500 mr-0.5 uppercase font-sans font-bold">${escapeHTML(name)}:</span>
+                            <span class="${color}">${sign}${s}</span>
+                        </span>
+                    `;
+                }).join(' ');
+                
+                let undoBtn = '';
+                if (isLatest) {
+                    undoBtn = `
+                        <button onclick="undoLastRound()" title="Undo round" class="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 p-1.5 rounded-lg border border-rose-500/10 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
+                        </button>
+                    `;
+                }
+                
+                if (isFix) {
+                    html += `
+                        <div class="bg-amber-500/5 p-3 rounded-xl border border-amber-500/20 shadow-sm flex flex-col gap-2 relative">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-bold text-amber-500 flex items-center gap-1 uppercase tracking-wider">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.63-1.515 2.63H4.72c-1.34 0-2.188-1.463-1.515-2.63l6.28-10.875zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                                    Manual Adjustment
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] text-amber-500/60 font-bold">${item.timestamp}</span>
+                                    ${undoBtn}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 font-mono">
+                                ${scoresHTML}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-gray-900/35 p-3 rounded-xl border border-white/5 shadow-sm flex flex-col gap-2 relative">
+                            <div class="flex justify-between items-center font-mono">
+                                <span class="text-xs font-bold text-gray-400 font-mono">Round ${historyLog.length - idx}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] text-gray-500 font-bold">${item.timestamp}</span>
+                                    ${undoBtn}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${scoresHTML}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html;
+        }
+
+        // --- SETTLEMENT CONTROLLER & DEBT SIMPLIFIER ---
+        function showSettlementForData(players, scoresData, dollarValue) {
+            const list = document.getElementById('settlementList');
+            if (!list) return;
+            list.innerHTML = '';
+            
+            // integer math cents
+            let cents = getCentsFromScores(scoresData, dollarValue);
+            
+            let netCents = cents.map((c, idx) => ({ 
+                name: players[idx], 
+                val: c
+            }));
+
+            let debtors = netCents.filter(p => p.val < 0).sort((a,b) => a.val - b.val);
+            let creditors = netCents.filter(p => p.val > 0).sort((a,b) => b.val - a.val);
+
+            if(debtors.length === 0 && creditors.length === 0) {
+                list.innerHTML = '<div class="text-center text-gray-500 italic py-6">All scores are 0. Everyone is even!</div>';
+                document.getElementById('settlementModal').classList.remove('hidden');
+                return;
+            }
+
+            let i = 0; 
+            let j = 0;
+            let htmlStr = '';
+
+            while (i < debtors.length && j < creditors.length) {
+                let debtor = debtors[i];
+                let creditor = creditors[j];
+                
+                let debtAmt = Math.abs(debtor.val);
+                let creditAmt = creditor.val;
+                let payAmt = Math.min(debtAmt, creditAmt);
+
+                debtor.val += payAmt;
+                creditor.val -= payAmt;
+                
+                const payDollars = (payAmt / 100).toFixed(2);
+
+                htmlStr += `
+                    <div class="bg-gray-950/60 p-4 rounded-xl border border-white/5 flex justify-between items-center mb-2 last:mb-0 shadow-sm">
+                        <div class="flex flex-col text-left w-1/3 truncate">
+                            <span class="text-rose-400 font-extrabold text-sm truncate">${escapeHTML(debtor.name)}</span>
+                            <span class="text-[9px] text-gray-600 font-extrabold uppercase tracking-widest mt-0.5">PAYS</span>
+                        </div>
+                        <div class="text-base font-black text-indigo-400 bg-indigo-500/10 px-4 py-1.5 rounded-xl border border-indigo-500/25 shadow-inner">
+                            $${payDollars}
+                        </div>
+                        <div class="flex flex-col text-right w-1/3 truncate">
+                            <span class="text-emerald-400 font-extrabold text-sm truncate">${escapeHTML(creditor.name)}</span>
+                            <span class="text-[9px] text-gray-600 font-extrabold uppercase tracking-widest mt-0.5">RECEIVES</span>
+                        </div>
+                    </div>`;
+                    
+                if (debtor.val === 0) i++;
+                if (creditor.val === 0) j++;
+            }
+            
+            list.innerHTML = htmlStr;
+            document.getElementById('settlementModal').classList.remove('hidden');
+        }
+
+        function showSettlement() {
+            showSettlementForData(PLAYERS, scores, unitVal);
+        }
+
+        function endGameAndPay() {
+            if (confirm("End current game session and calculate final settlements?")) {
+                archiveCurrentGame(true);
+                showSettlement();
+            }
+        }
+
+        // --- SETTINGS CONTROLLER ---
+        function toggleSettings() { 
+            const modal = document.getElementById('settingsModal');
+            const isOpening = modal.classList.contains('hidden');
+            if (isOpening) {
+                syncSettingsInputs();
+            }
+            modal.classList.toggle('hidden'); 
+        }
+
+        function updateConfig() { 
+            let val = parseFloat(document.getElementById('inpDollar').value);
+            if (isNaN(val) || val <= 0) {
+                showToast("Invalid unit value, defaulting to $0.50", "warning");
+                val = 0.50;
+                document.getElementById('inpDollar').value = 0.50;
+            }
+            unitVal = val; 
+            document.getElementById('displayDollar').innerText = unitVal.toFixed(2); 
+            saveActiveGame(); 
+            archiveCurrentGame(false);
+            renderStandings(); 
+        }
+
+        function renamePlayer(idx) { 
+            let n = document.getElementById(`renameP${idx}`).value.trim(); 
+            if (n) {
+                PLAYERS[idx] = n; 
+                saveActiveGame(); 
+                archiveCurrentGame(false);
+                init(); 
+                renderHistory();
+            } 
+        }
+        
+        function renderFix() {
+            let d = document.getElementById('fixInputs');
+            if (!d) return;
+            d.innerHTML = '';
+            PLAYERS.forEach((p, i) => {
+                d.innerHTML += `
+                    <div class="flex justify-between items-center gap-3">
+                        <span class="text-xs text-gray-400 font-bold truncate w-24">${escapeHTML(p)}</span>
+                        <input type="number" class="flex-1 bg-gray-950 border border-gray-850 text-white text-xs p-2 rounded-lg fix-in focus:outline-none focus:border-indigo-500 font-mono text-center" data-idx="${i}" value="0" oninput="checkFix()">
+                    </div>
+                `;
+            });
+        }
+
+        function checkFix() {
+            let s = 0; 
+            let hasNaN = false;
+            let allZero = true;
+            document.querySelectorAll('.fix-in').forEach(i => {
+                const val = parseInt(i.value, 10);
+                if (isNaN(val)) {
+                    hasNaN = true;
+                } else {
+                    s += val;
+                    if (val !== 0) allZero = false;
+                }
+            });
+            const sumEl = document.getElementById('fixSum');
+            if (sumEl) {
+                sumEl.innerText = hasNaN ? "Error" : s;
+                sumEl.className = (!hasNaN && s === 0) ? "font-bold text-emerald-400 text-sm" : "font-bold text-rose-400 text-sm";
+            }
+            document.getElementById('btnFix').disabled = (hasNaN || s !== 0 || allZero);
+        }
+
+        function applyFix() {
+            let fix = [0, 0, 0, 0]; 
+            let hasNaN = false;
+            document.querySelectorAll('.fix-in').forEach(i => {
+                const idx = parseInt(i.dataset.idx, 10);
+                const val = parseInt(i.value, 10);
+                if (isNaN(val)) {
+                    hasNaN = true;
+                } else {
+                    fix[idx] = val;
+                }
+            });
+            
+            if (hasNaN || fix.reduce((a, b) => a + b, 0) !== 0 || fix.every(v => v === 0)) {
+                showToast("Invalid adjustment values", "error");
+                return;
+            }
+            
+            scores = scores.map((s, i) => s + fix[i]);
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const fixRecord = {
+                type: 'fix',
+                timestamp: time,
+                pointsChange: [...fix]
+            };
+            
+            historyLog.unshift(fixRecord);
+            
+            saveActiveGame(); 
+            archiveCurrentGame(false);
+            
+            renderStandings(); 
+            renderHistory();
+            toggleSettings(); 
+            renderFix();
+            showToast("Manual adjust applied!", "warning");
+        }
+
+        // --- SIDEBAR TABS ---
+        function switchSidebarTab(tab) {
+            const tActive = document.getElementById('tab_active');
+            const tArchives = document.getElementById('tab_archives');
+            const cActive = document.getElementById('sidebar_active_content');
+            const cArchives = document.getElementById('sidebar_archives_content');
+            
+            if (tab === 'active') {
+                tActive.className = "flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner";
+                tArchives.className = "flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 text-gray-500 hover:text-gray-300";
+                cActive.classList.remove('hidden');
+                cArchives.classList.add('hidden');
+            } else {
+                tArchives.className = "flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner";
+                tActive.className = "flex-1 h-11 flex items-center justify-center text-xs font-extrabold rounded-xl transition duration-200 text-gray-500 hover:text-gray-300";
+                cActive.classList.add('hidden');
+                cArchives.classList.remove('hidden');
+                renderArchives();
+            }
+        }
+
+        // --- ARCHIVES CONTROLLER ---
+        function renderArchives() {
+            const container = document.getElementById('archivesList');
+            if (!container) return;
+            
+            const archives = getArchives();
+            if (archives.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 italic py-12 flex flex-col items-center justify-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-gray-650"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>
+                        No archived sessions.
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = archives.map(game => {
+                const formattedDate = new Date(game.date).toLocaleDateString(undefined, {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                
+                const standingsHTML = game.players.map((p, idx) => {
+                    const score = game.scores[idx];
+                    const absoluteCash = Math.abs(score * game.unitVal).toFixed(2);
+                    const cashText = score > 0 ? `(+$${absoluteCash})` : (score < 0 ? `(-$${absoluteCash})` : `($0.00)`);
+                    const isPos = score > 0;
+                    const isNeg = score < 0;
+                    const color = isPos ? 'text-emerald-400 font-bold' : (isNeg ? 'text-rose-400 font-bold' : 'text-gray-500');
+                    const sign = score > 0 ? '+' : '';
+                    return `
+                        <div class="flex justify-between items-center text-[10px] font-mono border-b border-white/5 last:border-b-0 py-0.5">
+                            <span class="text-gray-400 font-sans truncate mr-2 font-medium">${escapeHTML(p)}</span>
+                            <span class="${color}">${sign}${score} <span class="text-gray-500 ml-1 font-bold">${cashText}</span></span>
+                        </div>
+                    `;
+                }).join('');
+                
+                return `
+                    <div class="bg-gray-950/40 border border-white/5 rounded-xl p-3 shadow-md flex flex-col gap-2.5">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-[9px] text-gray-500 font-bold block">${formattedDate}</span>
+                                <span class="text-[8px] text-indigo-400 font-extrabold bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full inline-block mt-0.5 uppercase tracking-wide">
+                                    ${game.roundsCount} Rds • $${game.unitVal.toFixed(2)}
+                                </span>
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="restoreArchive('${game.id}')" title="Resume Match" class="bg-indigo-600 hover:bg-indigo-500 text-white p-1.5 rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                                </button>
+                                <button onclick="viewArchiveSettlement('${game.id}')" title="Payout Settlement" class="bg-emerald-600 hover:bg-emerald-500 text-white p-1.5 rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879-.659c1.171-.879 3.07-.879 4.242 0 1.172.879 1.172 2.303 0 3.182C13.536 21.319 12.542 22 11 22v-2m1-14V4m0 2c-1.11 0-2.08.402-2.599 1M12 8c1.11 0 2.08.402 2.599 1M12 8V7" /></svg>
+                                </button>
+                                <button onclick="deleteArchive('${game.id}')" title="Delete Match" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white text-rose-450 p-1.5 rounded-lg border border-rose-500/10 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0M4.5 12h15" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-950/80 p-2.5 rounded-xl border border-white/5">
+                            ${standingsHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function restoreArchive(id) {
+            if (confirm("Restore this archived game? Current active game session progress will be saved beforehand.")) {
+                const archives = getArchives();
+                const game = archives.find(g => g.id === id);
+                if (!game) return;
+                
+                if (historyLog.length > 0) {
+                    archiveCurrentGame(false);
+                }
+                
+                activeGameSessionId = game.id;
+                PLAYERS = [...game.players];
+                scores = [...game.scores];
+                historyLog = [...game.historyLog];
+                unitVal = game.unitVal;
+                
+                initRoundState();
+                saveActiveGame();
+                
+                init();
+                renderHistory();
+                syncSettingsInputs();
+                showToast("Archived game session loaded!");
+                switchSidebarTab('active');
+            }
+        }
+
+        function deleteArchive(id) {
+            if (confirm("Permanently delete this archived session? This cannot be undone.")) {
+                let archives = getArchives();
+                archives = archives.filter(g => g.id !== id);
+                saveArchives(archives);
+                renderArchives();
+                showToast("Session deleted", "error");
+            }
+        }
+
+        function viewArchiveSettlement(id) {
+            const archives = getArchives();
+            const game = archives.find(g => g.id === id);
+            if (!game) return;
+            showSettlementForData(game.players, game.scores, game.unitVal);
+        }
+
+        function exportArchives() {
+            const archives = getArchives();
+            const active = {
+                PLAYERS, scores, historyLog, unitVal, activeGameSessionId
+            };
+            const exportData = { archives, active };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", `pusoy_scorekeeper_backup_${Date.now()}.json`);
+            document.body.appendChild(dl);
+            dl.click();
+            dl.remove();
+            showToast("Backup exported successfully!");
+        }
+
+        function importArchives(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const r = new FileReader();
+            r.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data && (data.archives || data.active)) {
+                        let importedArchivesCount = 0;
+                        let importedActiveGame = false;
+                        
+                        if (data.archives && Array.isArray(data.archives)) {
+                            const validImported = data.archives.filter(isValidArchiveGame);
+                            if (validImported.length > 0) {
+                                const cur = getArchives();
+                                const merged = [...validImported];
+                                cur.forEach(c => {
+                                    if (!merged.some(m => m.id === c.id)) {
+                                        merged.push(c);
+                                    }
+                                });
+                                saveArchives(merged);
+                                importedArchivesCount = validImported.length;
+                            }
+                        }
+                        
+                        if (data.active && isValidActiveGame(data.active)) {
+                            PLAYERS = data.active.PLAYERS;
+                            scores = data.active.scores;
+                            historyLog = data.active.historyLog || [];
+                            unitVal = data.active.unitVal;
+                            activeGameSessionId = data.active.activeGameSessionId || 'game_' + Date.now();
+                            if (data.active.roundState && validateRoundState(data.active.roundState)) {
+                                roundState = data.active.roundState;
+                            } else {
+                                initRoundState();
+                            }
+                            saveActiveGame();
+                            importedActiveGame = true;
+                        }
+                        
+                        if (importedArchivesCount > 0 || importedActiveGame) {
+                            init();
+                            renderHistory();
+                            syncSettingsInputs();
+                            showToast("JSON imported successfully!");
+                            renderArchives();
+                        } else {
+                            showToast("No valid data found in backup", "error");
+                        }
+                    } else {
+                        showToast("Invalid file structure", "error");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast("Failed to parse file", "error");
+                }
+            };
+            r.readAsText(file);
+        }
+
+        // --- TOAST NOTIFICATIONS ---
+        function showToast(message, type = "success") {
+            const oldToast = document.querySelector('.toast-notif');
+            if (oldToast) oldToast.remove();
+            
+            let toast = document.createElement("div");
+            toast.className = `toast-notif fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[100] px-4 py-3 rounded-xl shadow-2xl transition duration-300 transform translate-y-8 opacity-0 flex items-center gap-2 border text-xs font-bold uppercase tracking-wider`;
+            
+            if (type === "success") {
+                toast.className += " bg-emerald-950/90 text-emerald-400 border-emerald-500/20";
+                toast.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.8-11.2a.75.75 0 00-1.06-1.06L9 9.38 7.26 7.64a.75.75 0 00-1.06 1.06l2.28 2.28a.75.75 0 001.06 0l4.3-4.3z" clip-rule="evenodd"/></svg> ${message}`;
+            } else if (type === "error" || type === "warning") {
+                toast.className += " bg-rose-950/90 text-rose-450 border-rose-500/20";
+                toast.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd"/></svg> ${message}`;
+            } else {
+                toast.className += " bg-indigo-950/90 text-indigo-450 border-indigo-500/20";
+                toast.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg> ${message}`;
+            }
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove("translate-y-8", "opacity-0");
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add("translate-y-8", "opacity-0");
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- APP STARTUP ON LOAD ---
+        window.addEventListener('DOMContentLoaded', () => {
+            if (loadActiveGame()) {
+                // Saved game exists – skip setup, show dashboard directly
+                const dashboard = document.getElementById('dashboardView');
+                dashboard.classList.remove('hidden');
+                init();
+                renderHistory();
+                renderArchives();
+                syncSettingsInputs();
+                showToast("Active game restored!");
+            } else {
+                // No saved game – show the setup modal
+                initRoundState();
+                const modal = document.getElementById('setupModal');
+                modal.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
