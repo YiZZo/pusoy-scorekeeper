@@ -372,6 +372,59 @@
         </div>
     </header>
 
+    <!-- Setup View -->
+    <div id="setupView" class="hidden max-w-md mx-auto w-full mb-8">
+        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full shadow-2xl relative">
+            <h2 id="setupTitle" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 mb-2">New Game Setup</h2>
+            <p id="setupDesc" class="text-xs text-gray-500 mb-6">Enter player names and unit stake value to begin recording.</p>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 1</label>
+                    <input type="text" id="setupP1" value="Player 1" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 2</label>
+                    <input type="text" id="setupP2" value="Player 2" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 3</label>
+                    <input type="text" id="setupP3" value="Player 3" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 4</label>
+                    <input type="text" id="setupP4" value="Player 4" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Dollar Value Per Point ($)</label>
+                    <input type="number" id="setupDollar" value="0.50" step="0.10" min="0.01" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition font-mono duration-200">
+                </div>
+            </div>
+
+            <!-- Manual Score Adjustments (Only visible mid-game) -->
+            <div id="setupFixSection" class="hidden bg-gray-950/40 p-4 rounded-xl border border-white/5 mb-6">
+                <h4 class="text-amber-500 font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.63-1.515 2.63H4.72c-1.34 0-2.188-1.463-1.515-2.63l6.28-10.875zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                    Manual Score Adjustment
+                </h4>
+                <div id="fixInputs" class="space-y-2"></div>
+                <div class="mt-3 pt-2.5 border-t border-white/5 flex justify-between items-center text-xs">
+                    <span class="text-gray-500 uppercase font-bold tracking-wider text-[10px]">Net Adjustment:</span>
+                    <span id="fixSum" class="font-bold text-emerald-400 text-sm font-mono">0</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-2.5">
+                <button id="btnStartGame" onclick="handleStartOrSave()" class="w-full h-11 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-xl transition text-sm uppercase tracking-wider shadow-lg hover:shadow-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    Start Game
+                </button>
+                <button id="btnCancelSetup" onclick="showGameView()" class="hidden w-full h-11 bg-gray-900/60 hover:bg-gray-850 hover:text-white text-gray-400 rounded-xl font-bold transition text-xs border border-white/5 flex items-center justify-center">
+                    Cancel &amp; Resume
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div id="dashboardView" class="hidden">
   <main class="dashboard-grid flex-1 mb-8">
@@ -527,86 +580,18 @@
             </div>
         </div>
     </main>
-    </div> <!-- /dashboardView -->
-
-    <!-- Modal: Setup New Game -->
-    <div id="setupModal" class="hidden fixed inset-0 bg-gray-950/80 z-[60] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl relative max-h-[95vh] overflow-y-auto custom-scrollbar">
-            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 mb-2">New Game Setup</h2>
-            <p class="text-xs text-gray-500 mb-6">Enter player names and unit stake value to begin recording.</p>
-            
-            <div class="space-y-4 mb-6">
-                <div>
-                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 1</label>
-                    <input type="text" id="setupP1" value="Player 1" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 2</label>
-                    <input type="text" id="setupP2" value="Player 2" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 3</label>
-                    <input type="text" id="setupP3" value="Player 3" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Player 4</label>
-                    <input type="text" id="setupP4" value="Player 4" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition duration-200">
-                </div>
-                <div>
-                    <label class="text-[10px] text-gray-500 uppercase font-bold tracking-wider block mb-1">Dollar Value Per Point ($)</label>
-                    <input type="number" id="setupDollar" value="0.50" step="0.10" min="0.01" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-3 text-white text-sm transition font-mono duration-200">
-                </div>
-            </div>
-            
-            <button onclick="startGame()" class="w-full h-11 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold rounded-xl transition text-sm uppercase tracking-wider shadow-lg hover:shadow-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                Start Game
+        
+        <!-- Floating Settings & Fixes Button -->
+        <div class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50">
+            <button onclick="toggleSettings()" class="flex items-center gap-2 px-4 py-3 bg-[#0b0c1e]/90 text-white rounded-full border border-white/10 hover:border-brand-primary shadow-2xl hover:shadow-brand-primary/20 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 backdrop-blur-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-indigo-400 transition-transform duration-500 hover:rotate-90">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.936 6.936 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                <span class="text-xs font-black uppercase tracking-wider">Settings &amp; Fixes</span>
             </button>
         </div>
-    </div>
-
-    <!-- Modal: Settings / Fixes -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-50 backdrop-blur-md p-4">
-        <div class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-black text-white flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-indigo-400"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.732 6.232a.5.5 0 00-.707.707L8.793 7.7a2.5 2.5 0 010 3.536l-.768.768a.5.5 0 00.707.707l.768-.768a3.5 3.5 0 000-4.95l-.768-.768zm3.536 0a3.5 3.5 0 010 4.95l-.768.768a.5.5 0 00.707.707l.768-.768a2.5 2.5 0 000-3.536l-.768-.768a.5.5 0 00-.707.707l.768.768z" clip-rule="evenodd" /></svg>
-                    Settings &amp; Fixes
-                </h2>
-                <button onclick="toggleSettings()" class="text-gray-500 hover:text-white text-2xl transition">&times;</button>
-            </div>
-            
-            <div class="mb-5 pb-5 border-b border-white/5">
-                <label class="block text-gray-400 text-[10px] uppercase font-bold tracking-wider mb-2">Dollar Value Per Point ($)</label>
-                <input type="number" id="inpDollar" min="0.01" step="0.10" class="w-full bg-gray-950/60 border border-white/10 rounded-xl p-3 text-white text-sm font-mono focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition duration-200" onchange="updateConfig()">
-            </div>
-            
-            <div class="mb-5 pb-5 border-b border-white/5">
-                <h4 class="text-indigo-400 font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.29-.226.395-.615.222-.924l-.79-1.41a6.002 6.002 0 00-11.2 0l-.79 1.41z" /></svg>
-                    Rename Players
-                </h4>
-                <div class="space-y-2">
-                    <input type="text" id="renameP0" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(0)">
-                    <input type="text" id="renameP1" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(1)">
-                    <input type="text" id="renameP2" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(2)">
-                    <input type="text" id="renameP3" class="w-full bg-gray-950/60 border border-white/10 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 focus:outline-none rounded-xl p-2.5 text-xs text-white transition duration-200" onchange="renamePlayer(3)">
-                </div>
-            </div>
-            
-            <div class="bg-gray-950/40 p-4 rounded-xl border border-white/5">
-                <h4 class="text-amber-500 font-bold text-xs mb-3 uppercase tracking-wider flex items-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.63-1.515 2.63H4.72c-1.34 0-2.188-1.463-1.515-2.63l6.28-10.875zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
-                    Manual score Adjustment
-                </h4>
-                <div id="fixInputs" class="space-y-2"></div>
-                <div class="mt-3 pt-2.5 border-t border-white/5 flex justify-between items-center text-xs">
-                    <span class="text-gray-500 uppercase font-bold tracking-wider text-[10px]">Net Adjustment:</span>
-                    <span id="fixSum" class="font-bold text-emerald-400 text-sm font-mono">0</span>
-                </div>
-                <button id="btnFix" onclick="applyFix()" disabled class="w-full mt-3 h-11 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-lg text-xs disabled:opacity-30 disabled:cursor-not-allowed transition uppercase tracking-wider border border-indigo-500/20 flex items-center justify-center">Apply Fix</button>
-            </div>
-        </div>
-    </div>
+    </div> <!-- /dashboardView -->
 
     <!-- Modal: Settlement -->
     <div id="settlementModal" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-[80] backdrop-blur-md p-4">
@@ -851,7 +836,90 @@
             }
         }
 
-        // --- GAME ACTIONS ---
+        // --- GAME ACTIONS & STATE SWITCHERS ---
+        function showSetupView(isMidMatch = false) {
+            const setupView = document.getElementById('setupView');
+            const dashboard = document.getElementById('dashboardView');
+            const setupTitle = document.getElementById('setupTitle');
+            const setupDesc = document.getElementById('setupDesc');
+            const startBtn = document.getElementById('btnStartGame');
+            const cancelBtn = document.getElementById('btnCancelSetup');
+            const fixSection = document.getElementById('setupFixSection');
+
+            // Set inputs to active game values if mid-match
+            document.getElementById('setupP1').value = PLAYERS[0];
+            document.getElementById('setupP2').value = PLAYERS[1];
+            document.getElementById('setupP3').value = PLAYERS[2];
+            document.getElementById('setupP4').value = PLAYERS[3];
+            document.getElementById('setupDollar').value = unitVal;
+
+            if (isMidMatch) {
+                setupTitle.innerText = "Settings & Fixes";
+                setupDesc.innerText = "Rename players, modify the unit stake, or adjust scores manually.";
+                startBtn.innerText = "Save & Resume";
+                cancelBtn.classList.remove('hidden');
+                fixSection.classList.remove('hidden');
+                
+                // Initialize the manual adjustment inputs
+                renderFix();
+                checkFix(); // Enable or disable save button based on net adjustment
+            } else {
+                setupTitle.innerText = "New Game Setup";
+                setupDesc.innerText = "Enter player names and unit stake value to begin recording.";
+                startBtn.innerText = "Start Game";
+                startBtn.disabled = false;
+                startBtn.classList.remove('opacity-30', 'cursor-not-allowed');
+                cancelBtn.classList.add('hidden');
+                fixSection.classList.add('hidden');
+            }
+
+            // Slide out dashboard
+            if (!dashboard.classList.contains('hidden')) {
+                dashboard.classList.add('slide-out-up');
+                setTimeout(() => {
+                    dashboard.classList.add('hidden');
+                    dashboard.classList.remove('slide-out-up');
+                    
+                    // Slide in setup
+                    setupView.classList.remove('hidden');
+                    setupView.classList.add('slide-in-down');
+                    setTimeout(() => {
+                        setupView.classList.remove('slide-in-down');
+                    }, 450);
+                }, 350);
+            } else {
+                setupView.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            }
+        }
+
+        function showGameView() {
+            const setupView = document.getElementById('setupView');
+            const dashboard = document.getElementById('dashboardView');
+
+            // Slide out setup
+            setupView.classList.add('slide-out-up');
+            setTimeout(() => {
+                setupView.classList.add('hidden');
+                setupView.classList.remove('slide-out-up');
+
+                // Slide in dashboard
+                dashboard.classList.remove('hidden');
+                dashboard.classList.add('slide-in-up');
+                setTimeout(() => {
+                    dashboard.classList.remove('slide-in-up');
+                }, 450);
+            }, 350);
+        }
+
+        function handleStartOrSave() {
+            if (activeGameSessionId && (historyLog.length > 0 || scores.some(s => s !== 0))) {
+                saveMidMatchChanges();
+            } else {
+                startGame();
+            }
+        }
+
         function startGame() {
             const p1 = document.getElementById('setupP1').value.trim() || "Player 1";
             const p2 = document.getElementById('setupP2').value.trim() || "Player 2";
@@ -875,26 +943,77 @@
             saveActiveGame();
             syncSettingsInputs();
 
-            // Slide out the setup modal
-            const modal = document.getElementById('setupModal');
-            modal.classList.add('slide-out-up');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('slide-out-up');
-            }, 350);
-
-            // Reveal dashboard with slide-in animation
-            const dashboard = document.getElementById('dashboardView');
-            dashboard.classList.remove('hidden');
-            dashboard.classList.add('slide-in-up');
-            setTimeout(() => {
-                dashboard.classList.remove('slide-in-up');
-            }, 450);
+            showGameView();
 
             init();
             renderHistory();
 
             showToast("New game session started!");
+        }
+
+        function saveMidMatchChanges() {
+            const p1 = document.getElementById('setupP1').value.trim() || "Player 1";
+            const p2 = document.getElementById('setupP2').value.trim() || "Player 2";
+            const p3 = document.getElementById('setupP3').value.trim() || "Player 3";
+            const p4 = document.getElementById('setupP4').value.trim() || "Player 4";
+
+            PLAYERS = [p1, p2, p3, p4];
+
+            let val = parseFloat(document.getElementById('setupDollar').value);
+            if (isNaN(val) || val <= 0) {
+                showToast("Invalid unit value, defaulting to $0.50", "warning");
+                val = 0.50;
+            }
+            unitVal = val;
+
+            // Check and apply manual adjustments if any
+            let fix = [0, 0, 0, 0];
+            let hasNaN = false;
+            let allZero = true;
+            document.querySelectorAll('.fix-in').forEach(i => {
+                const idx = parseInt(i.dataset.idx, 10);
+                const val = parseInt(i.value, 10);
+                if (isNaN(val)) {
+                    hasNaN = true;
+                } else {
+                    fix[idx] = val;
+                    if (val !== 0) allZero = false;
+                }
+            });
+
+            if (hasNaN) {
+                showToast("Invalid score adjustment values", "error");
+                return;
+            }
+
+            const netAdjustment = fix.reduce((a, b) => a + b, 0);
+            if (netAdjustment !== 0) {
+                showToast("Score adjustments must sum to 0", "error");
+                return;
+            }
+
+            if (!allZero) {
+                scores = scores.map((s, i) => s + fix[i]);
+                const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const fixRecord = {
+                    type: 'fix',
+                    timestamp: time,
+                    pointsChange: [...fix]
+                };
+                historyLog.unshift(fixRecord);
+                showToast("Settings updated & score adjustment applied!", "warning");
+            } else {
+                showToast("Settings updated!");
+            }
+
+            saveActiveGame();
+            archiveCurrentGame(false);
+
+            showGameView();
+
+            init();
+            renderHistory();
+            syncSettingsInputs();
         }
 
         function setupNewGame() {
@@ -911,34 +1030,16 @@
                 unitVal = 0.50;
                 initRoundState();
                 
-                // Slide out dashboard, slide in setup modal
-                const dashboard = document.getElementById('dashboardView');
-                dashboard.classList.add('slide-out-up');
-                setTimeout(() => {
-                    dashboard.classList.add('hidden');
-                    dashboard.classList.remove('slide-out-up');
-                }, 350);
-
-                const modal = document.getElementById('setupModal');
-                modal.classList.remove('hidden');
-                modal.classList.add('slide-in-down');
-                setTimeout(() => {
-                    modal.classList.remove('slide-in-down');
-                }, 450);
-
-                document.getElementById('setupP1').value = PLAYERS[0];
-                document.getElementById('setupP2').value = PLAYERS[1];
-                document.getElementById('setupP3').value = PLAYERS[2];
-                document.getElementById('setupP4').value = PLAYERS[3];
-                document.getElementById('setupDollar').value = unitVal;
+                showSetupView(false);
             }
         }
 
         function syncSettingsInputs() {
-            document.getElementById('inpDollar').value = unitVal;
-            for(let i = 0; i < 4; i++) {
-                document.getElementById(`renameP${i}`).value = PLAYERS[i];
-            }
+            document.getElementById('setupDollar').value = unitVal;
+            document.getElementById('setupP1').value = PLAYERS[0];
+            document.getElementById('setupP2').value = PLAYERS[1];
+            document.getElementById('setupP3').value = PLAYERS[2];
+            document.getElementById('setupP4').value = PLAYERS[3];
         }
 
         function init() {
@@ -1716,37 +1817,13 @@
 
         // --- SETTINGS CONTROLLER ---
         function toggleSettings() { 
-            const modal = document.getElementById('settingsModal');
-            const isOpening = modal.classList.contains('hidden');
+            const setupView = document.getElementById('setupView');
+            const isOpening = setupView.classList.contains('hidden');
             if (isOpening) {
-                syncSettingsInputs();
+                showSetupView(true);
+            } else {
+                showGameView();
             }
-            modal.classList.toggle('hidden'); 
-        }
-
-        function updateConfig() { 
-            let val = parseFloat(document.getElementById('inpDollar').value);
-            if (isNaN(val) || val <= 0) {
-                showToast("Invalid unit value, defaulting to $0.50", "warning");
-                val = 0.50;
-                document.getElementById('inpDollar').value = 0.50;
-            }
-            unitVal = val; 
-            document.getElementById('displayDollar').innerText = unitVal.toFixed(2); 
-            saveActiveGame(); 
-            archiveCurrentGame(false);
-            renderStandings(); 
-        }
-
-        function renamePlayer(idx) { 
-            let n = document.getElementById(`renameP${idx}`).value.trim(); 
-            if (n) {
-                PLAYERS[idx] = n; 
-                saveActiveGame(); 
-                archiveCurrentGame(false);
-                init(); 
-                renderHistory();
-            } 
         }
         
         function renderFix() {
@@ -1781,47 +1858,20 @@
                 sumEl.innerText = hasNaN ? "Error" : s;
                 sumEl.className = (!hasNaN && s === 0) ? "font-bold text-emerald-400 text-sm" : "font-bold text-rose-400 text-sm";
             }
-            document.getElementById('btnFix').disabled = (hasNaN || s !== 0 || allZero);
+            
+            const saveBtn = document.getElementById('btnStartGame');
+            if (saveBtn) {
+                if (hasNaN || s !== 0) {
+                    saveBtn.disabled = true;
+                    saveBtn.classList.add('opacity-30', 'cursor-not-allowed');
+                } else {
+                    saveBtn.disabled = false;
+                    saveBtn.classList.remove('opacity-30', 'cursor-not-allowed');
+                }
+            }
         }
 
-        function applyFix() {
-            let fix = [0, 0, 0, 0]; 
-            let hasNaN = false;
-            document.querySelectorAll('.fix-in').forEach(i => {
-                const idx = parseInt(i.dataset.idx, 10);
-                const val = parseInt(i.value, 10);
-                if (isNaN(val)) {
-                    hasNaN = true;
-                } else {
-                    fix[idx] = val;
-                }
-            });
-            
-            if (hasNaN || fix.reduce((a, b) => a + b, 0) !== 0 || fix.every(v => v === 0)) {
-                showToast("Invalid adjustment values", "error");
-                return;
-            }
-            
-            scores = scores.map((s, i) => s + fix[i]);
-            
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const fixRecord = {
-                type: 'fix',
-                timestamp: time,
-                pointsChange: [...fix]
-            };
-            
-            historyLog.unshift(fixRecord);
-            
-            saveActiveGame(); 
-            archiveCurrentGame(false);
-            
-            renderStandings(); 
-            renderHistory();
-            toggleSettings(); 
-            renderFix();
-            showToast("Manual adjust applied!", "warning");
-        }
+
 
         // --- SIDEBAR TABS ---
         function switchSidebarTab(tab) {
@@ -2075,10 +2125,9 @@
                 syncSettingsInputs();
                 showToast("Active game restored!");
             } else {
-                // No saved game – show the setup modal
+                // No saved game – show setup view
                 initRoundState();
-                const modal = document.getElementById('setupModal');
-                modal.classList.remove('hidden');
+                showSetupView(false);
             }
         });
     </script>
