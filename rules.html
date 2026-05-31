@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusoy (Chinese Poker) — Complete Rules</title>
+    <!-- Google Fonts & FontAwesome / Icons if needed, but we can draw beautiful icons via inline SVGs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030805;
+            --panel-bg: rgba(6, 20, 11, 0.55);
+            --border-color: rgba(52, 211, 153, 0.12);
+            --accent-mint: #34d399;
+            --accent-emerald: #10B981;
+            --accent-gold: #f59e0b;
+            --text-primary: #ecfdf5;
+            --text-secondary: #a7f3d0;
+            --text-muted: #6ee7b7;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 24px 16px;
+            min-h: 100vh;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Backgrounds */
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -10;
+            overflow: hidden;
+        }
+        .glow-1 {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 60%;
+            height: 50%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+        .glow-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 16px 24px;
+            border-radius: 20px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-mint);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: var(--transition-smooth);
+        }
+        .back-link:hover {
+            color: #fff;
+            transform: translateX(-3px);
+        }
+
+        /* Title Area */
+        .title-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .title-section h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+        .title-section p {
+            color: #a7f3d0;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.85;
+        }
+
+        /* Section Layout cards */
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            transition: var(--transition-smooth);
+        }
+        .card:hover {
+            border-color: rgba(52, 211, 153, 0.25);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.05);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-mint);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(52, 211, 153, 0.1);
+            padding-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+        ul li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+        ul li::before {
+            content: "✦";
+            position: absolute;
+            left: 6px;
+            color: var(--accent-mint);
+            font-weight: bold;
+        }
+
+        /* Highlight box / warnings */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+            color: #fef3c7;
+        }
+        .warning-box strong {
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        /* Gold Rule Layout */
+        .golden-rule-container {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .golden-rule-title {
+            color: var(--accent-mint);
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .golden-rule-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            font-family: 'Fira Code', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 24px;
+            border-radius: 12px;
+            max-width: max-content;
+            margin: 0 auto 12px auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .golden-rule-visual span {
+            color: #fff;
+        }
+        .golden-rule-visual .rule-part {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Tables styling */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 24px 0;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            text-align: left;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(52, 211, 153, 0.06);
+        }
+        th {
+            background-color: rgba(6, 26, 14, 0.8);
+            color: var(--accent-mint);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:nth-child(even) td {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Card representation styles */
+        .card-row-demo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .playing-card {
+            background: #ffffff;
+            color: #000000;
+            width: 48px;
+            height: 70px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 6px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            user-select: none;
+        }
+        .playing-card.red-suit {
+            color: #ef4444;
+        }
+        .playing-card .card-suit {
+            align-self: flex-end;
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        /* FAQs layout */
+        .faq-item {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: var(--transition-smooth);
+        }
+        .faq-item:hover {
+            border-color: var(--border-color);
+            background: rgba(16, 185, 129, 0.02);
+        }
+        .faq-item .question {
+            font-weight: 700;
+            color: var(--accent-mint);
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .faq-item .question::before {
+            content: "Q:";
+            color: var(--accent-gold);
+            font-weight: 800;
+        }
+        .faq-item .answer {
+            color: var(--text-secondary);
+            padding-left: 24px;
+        }
+
+        /* Grids for Rules content */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* DOs and DONTs specifically styled */
+        .do-dont-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media (min-width: 768px) {
+            .do-dont-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .do-panel {
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .do-panel h4 {
+            color: #34d399;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+        .dont-panel {
+            background: rgba(244, 63, 94, 0.03);
+            border: 1px solid rgba(244, 63, 94, 0.15);
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .dont-panel h4 {
+            color: #f43f5e;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+        .do-dont-item {
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .do-dont-item strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* SVG Icons */
+        .icon-svg {
+            display: inline-block;
+            vertical-align: middle;
+            width: 1.25rem;
+            height: 1.25rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <div class="container">
+        
+        <header>
+            <div class="header-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg" style="color: var(--accent-mint); width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-3.75-2.25v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+                <span class="logo-text">Pusoy Scorekeeper</span>
+            </div>
+            <a href="index.html" class="back-link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                Back to Scorekeeper
+            </a>
+        </header>
+
+        <div class="title-section">
+            <h1>Pusoy (Chinese Poker) Complete Rule Sheet</h1>
+            <p>Pusoy is a 13-card game of arrangement and strategy popular in the Philippines and Asian communities worldwide. Unlike traditional poker, there are no betting rounds or bluffing. The skill lies entirely in how you distribute your cards across three separate hands.</p>
+        </div>
+
+        <div class="grid-2">
+            <!-- Left Column -->
+            <div class="left-col">
+                
+                <!-- Setup and Dealing -->
+                <div class="card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg>
+                        1. Setup and Dealing
+                    </h2>
+                    <ul>
+                        <li><strong>Players:</strong> 2 to 4 players (4 is ideal for lively table dynamics).</li>
+                        <li><strong>Deck:</strong> Standard 52-card deck (no jokers).</li>
+                        <li><strong>The Deal:</strong> Every player is dealt 13 cards face down.</li>
+                        <li><strong>The Action:</strong> There are no community cards, draws, or discards. You must play the 13 cards you are dealt.</li>
+                    </ul>
+                </div>
+
+                <!-- Hand Structure & Golden Rule -->
+                <div class="card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" /></svg>
+                        2. The 13-Card Hand Structure
+                    </h2>
+                    <p>You must split your 13 cards into three separate poker hands, set face down on the table in a vertical column:</p>
+                    <ul>
+                        <li><strong>Front Hand (Top Row):</strong> 3 cards</li>
+                        <li><strong>Middle Hand (Middle Row):</strong> 5 cards</li>
+                        <li><strong>Back Hand (Bottom Row):</strong> 5 cards</li>
+                    </ul>
+
+                    <div class="golden-rule-container">
+                        <div class="golden-rule-title">The Golden Rule (Avoiding a Foul)</div>
+                        <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 12px;">Your three hands must follow a strict hierarchy of strength:</p>
+                        <div class="golden-rule-visual">
+                            <span class="rule-part">Back</span>
+                            <span>&gt;</span>
+                            <span class="rule-part">Middle</span>
+                            <span>&gt;</span>
+                            <span class="rule-part">Front</span>
+                        </div>
+                        <ul style="text-align: left; margin: 12px 0 0 0; font-size: 0.9rem;">
+                            <li style="margin-bottom: 6px;">The Back Hand must be your absolute strongest 5-card hand.</li>
+                            <li style="margin-bottom: 6px;">The Middle Hand must be stronger than your Front hand, but weaker than your Back hand.</li>
+                            <li style="margin-bottom: 0;">The Front Hand must be the weakest of the three.</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ CRITICAL FOUL RULE:</strong>
+                        If your hand strength breaks this order (e.g., your Middle Hand is stronger than your Back Hand), your entire arrangement is declared a Foul. You automatically lose all comparisons for that round. Avoid fouls first, optimize strength second.
+                    </div>
+                </div>
+
+                <!-- Hand Rankings -->
+                <div class="card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.467 5.99 5.99 0 0 0-1.925 3.546 5.974 5.974 0 0 1-2.133-1A3.75 3.75 0 0 0 12 18Z" /></svg>
+                        3. Poker Hand Rankings
+                    </h2>
+                    <p>Pusoy uses traditional poker hand rankings, but they differ slightly depending on the row.</p>
+                    
+                    <h3 style="color: var(--accent-mint); font-size: 1.1rem; font-weight: 700; margin: 16px 0 8px 0;">5-Card Hands (Back & Middle Rows)</h3>
+                    <p style="font-size: 0.95rem; line-height: 1.5;">From strongest to weakest: <br><strong>Royal Flush, Straight Flush, Four of a Kind, Full House, Flush, Straight, Three of a Kind, Two Pair, One Pair, High Card.</strong></p>
+
+                    <h3 style="color: var(--accent-mint); font-size: 1.1rem; font-weight: 700; margin: 20px 0 8px 0;">3-Card Hand (Front/Top Row)</h3>
+                    <p style="font-size: 0.95rem; margin-bottom: 12px;">Because the front hand only has three cards, its ranking system is highly simplified:</p>
+                    <ul style="font-size: 0.95rem;">
+                        <li>Three of a Kind (Trips) — Strongest</li>
+                        <li>One Pair</li>
+                        <li>High Card — Weakest</li>
+                    </ul>
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; color: #a7f3d0; font-style: italic;">
+                        🚫 Note: Straights and Flushes do not count in the front hand. A 3-4-5 or three hearts in the front row is simply evaluated as a "High Card" hand.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-col">
+                
+                <!-- Scoring System -->
+                <div class="card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879-.659c1.171-.879 3.07-.879 4.242 0 1.172.879 1.172 2.303 0 3.182C13.536 21.319 12.542 22 11 22v-2m1-14V4m0 2c-1.11 0-2.08.402-2.599 1M12 8c1.11 0 2.08.402 2.599 1M12 8V7" /></svg>
+                        4. Scoring &amp; Bonuses
+                    </h2>
+                    <p>Once all players have arranged their hands, everyone reveals their cards simultaneously. You compare your Top to their Top, Middle to Middle, and Bottom to Bottom.</p>
+                    <ul>
+                        <li>Win a row: +1 point</li>
+                        <li>Lose a row: -1 point</li>
+                    </ul>
+                    
+                    <div style="background: rgba(0,0,0,0.2); padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.03); margin-top: 16px;">
+                        <h4 style="color: var(--accent-mint); font-weight: 700; margin-bottom: 8px; font-size: 0.95rem;">Example Comparison Scenario:</h4>
+                        <ul style="font-size: 0.9rem; margin-bottom: 0;">
+                            <li><strong>Top Row:</strong> You have a Pair of 5s. Opponent has Ace High. <span style="color: #34d399; font-weight: bold;">(You Win: +1)</span></li>
+                            <li><strong>Middle Row:</strong> You have Two Pair. Opponent has a Flush. <span style="color: #f43f5e; font-weight: bold;">(You Lose: -1)</span></li>
+                            <li><strong>Bottom Row:</strong> You have a Full House. Opponent has a Straight. <span style="color: #34d399; font-weight: bold;">(You Win: +1)</span></li>
+                            <li style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; margin-top: 8px; list-style: none; font-weight: 800; color: #fff;">Result: +1 -1 +1 = <span style="color: var(--accent-mint);">+1 Net Point</span> against that specific opponent.</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="color: var(--accent-mint); font-size: 1.1rem; font-weight: 700; margin: 24px 0 8px 0;">Bonuses (Scooping)</h3>
+                    <p>If you beat an opponent in all three hands (Top, Middle, and Bottom), it is called a <strong>Scoop</strong> (or a "1-2-3"). Because winning all three rows is difficult, a Scoop triggers a bonus payout depending on house rules:</p>
+                    <ul>
+                        <li><strong>Standard Bonus:</strong> Doubles the total round points, or awards a flat +6 points instead of the usual +3.</li>
+                    </ul>
+                    <div class="warning-box" style="margin-top: 16px; margin-bottom: 0;">
+                        <strong>⚠️ Foul Penalty:</strong> If you foul your hand, you automatically pay out maximum points (as if you were scooped) to every player at the table who holds a valid hand.
+                    </div>
+                </div>
+
+                <!-- Royalties -->
+                <div class="card">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 0a7.454 7.454 0 0 0 .981 3.172M8.25 7.5c.621 0 1.125-.504 1.125-1.125V3.375c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v3.003c0 .621.504 1.125 1.125 1.125h4.875ZM19.125 7.5c.621 0 1.125-.504 1.125-1.125V3.375c0-.621-.504-1.125-1.125-1.125h-4.875c-.621 0-1.125.504-1.125 1.125v3.003c0 .621.504 1.125 1.125 1.125h4.875Z" /></svg>
+                        5. Royalties (Naturals)
+                    </h2>
+                    <p>Royalties are rare, special 13-card distributions that win the game automatically. If you are dealt a Royalty, you declare it immediately before any cards are compared. You do not have to arrange your hands, you cannot foul, and you collect points from all opponents right away.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 16px;">
+                        <div style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.15); padding: 16px; border-radius: 12px;">
+                            <strong style="color: var(--accent-gold); display: block; font-size: 0.95rem; margin-bottom: 4px;">🐉 Dragon</strong>
+                            <p style="font-size: 0.9rem; margin-bottom: 0; opacity: 0.9;">All 13 cards in your hand form a perfect, unbroken sequence from Ace to King (A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K). This is the ultimate automatic win.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px;">
+                            <strong style="color: var(--accent-mint); display: block; font-size: 0.95rem; margin-bottom: 4px;">🃏 All Pairs</strong>
+                            <p style="font-size: 0.9rem; margin-bottom: 0; opacity: 0.9;">Your 13 cards consist of exactly 6 distinct pairs and 1 odd card.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px;">
+                            <strong style="color: var(--accent-mint); display: block; font-size: 0.95rem; margin-bottom: 4px;">📏 Three Straights</strong>
+                            <p style="font-size: 0.9rem; margin-bottom: 0; opacity: 0.9;">You manage to successfully configure a 3-card straight in the front row, a 5-card straight in the middle row, and a 5-card straight in the back row.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px;">
+                            <strong style="color: var(--accent-mint); display: block; font-size: 0.95rem; margin-bottom: 4px;">💧 Three Flushes</strong>
+                            <p style="font-size: 0.9rem; margin-bottom: 0; opacity: 0.9;">You manage to successfully configure a 3-card flush in the front row, a 5-card flush in the middle row, and a 5-card flush in the back row.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Step-by-Step Example Hand -->
+        <div class="card" style="margin-top: 12px;">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-.621-.504-1.125-1.125-1.125H9.75M10.5 4.875C10.5 3.56 11.56 2.5 12.875 2.5h8.25c1.315 0 2.375 1.06 2.375 2.375v14.25c0 1.315-1.06 2.375-2.375 2.375h-8.25c-1.315 0-2.375-1.06-2.375-2.375V4.875ZM3.75 8.125c0-1.315 1.06-2.375 2.375-2.375h8.25c1.315 0 2.375 1.06 2.375 2.375v14.25c0 1.315-1.06 2.375-2.375 2.375h-8.25c-1.315 0-2.375-1.06-2.375-2.375V8.125Z" /></svg>
+                6. Step-by-Step Example Hand
+            </h2>
+            <p>Imagine you are dealt these 13 cards: <strong>A♠, K♠, Q♠, J♠, 10♠, 9♦, 9♣, 9♠, 7♥, 7♦, 4♣, 3♦, 2♥</strong></p>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Row</th>
+                            <th style="width: 50%;">Hand Combination</th>
+                            <th style="width: 30%;">Strength Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FRONT (Top)</strong></td>
+                            <td>
+                                <div class="card-row-demo">
+                                    <div class="playing-card"><span>4</span><span class="card-suit">♣</span></div>
+                                    <div class="playing-card red-suit"><span>3</span><span class="card-suit">♦</span></div>
+                                    <div class="playing-card red-suit"><span>2</span><span class="card-suit">♥</span></div>
+                                </div>
+                            </td>
+                            <td><span style="color: #9ca3af;">High Card (Weakest)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>MIDDLE</strong></td>
+                            <td>
+                                <div class="card-row-demo">
+                                    <div class="playing-card red-suit"><span>9</span><span class="card-suit">♦</span></div>
+                                    <div class="playing-card"><span>9</span><span class="card-suit">♣</span></div>
+                                    <div class="playing-card"><span>9</span><span class="card-suit">♠</span></div>
+                                    <div class="playing-card red-suit"><span>7</span><span class="card-suit">♥</span></div>
+                                    <div class="playing-card red-suit"><span>7</span><span class="card-suit">♦</span></div>
+                                </div>
+                            </td>
+                            <td><span style="color: #60a5fa;">Full House (Medium)</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>BACK (Bottom)</strong></td>
+                            <td>
+                                <div class="card-row-demo">
+                                    <div class="playing-card"><span>A</span><span class="card-suit">♠</span></div>
+                                    <div class="playing-card"><span>K</span><span class="card-suit">♠</span></div>
+                                    <div class="playing-card"><span>Q</span><span class="card-suit">♠</span></div>
+                                    <div class="playing-card"><span>J</span><span class="card-suit">♠</span></div>
+                                    <div class="playing-card"><span>10</span><span class="card-suit">♠</span></div>
+                                </div>
+                            </td>
+                            <td><span style="color: var(--accent-mint);">Royal Flush (Strongest)</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-bottom: 0; font-style: italic;">This setup is completely valid because Royal Flush &gt; Full House &gt; High Card hierarchy is strictly maintained.</p>
+        </div>
+
+        <!-- Do's & Don'ts -->
+        <div class="card">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                7. Beginner Mistakes &amp; Strategy Tips
+            </h2>
+            <div class="do-dont-grid">
+                <div class="do-panel">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="icon-svg" style="width: 18px; height: 18px;"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
+                        What to Do
+                    </h4>
+                    <div class="do-dont-item">
+                        <strong>Check your hierarchy every time</strong>
+                        Double-check that Back &gt; Middle &gt; Front before laying your cards down.
+                    </div>
+                    <div class="do-dont-item">
+                        <strong>Aim for balance</strong>
+                        A competitive middle hand is often the secret to winning the overall round and setting up a Scoop.
+                    </div>
+                    <div class="do-dont-item">
+                        <strong>Play it safe if unsure</strong>
+                        If you have to choose between a risky combination that might foul and a safe, slightly weaker layout—choose the safe layout.
+                    </div>
+                </div>
+                
+                <div class="dont-panel">
+                    <h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="icon-svg" style="width: 18px; height: 18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
+                        What to Avoid
+                    </h4>
+                    <div class="do-dont-item">
+                        <strong>Don't overload the back hand</strong>
+                        Putting your absolute best combinations in the back while leaving your middle with a "High Card" usually results in losing 2 out of 3 rows.
+                    </div>
+                    <div class="do-dont-item">
+                        <strong>Don't treat the front hand as trash</strong>
+                        A small pair in the front row wins surprisingly often in casual games and acts as a powerful swing factor.
+                    </div>
+                    <div class="do-dont-item">
+                        <strong>Don't confuse Pusoy with Pusoy Dos</strong>
+                        Pusoy Dos is a shedding game similar to "Big Two." This game is Pusoy (Chinese Poker), which is purely about 13-card hand structure.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQs -->
+        <div class="card" style="margin-bottom: 40px;">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" /></svg>
+                8. Table FAQ
+            </h2>
+            <div class="faq-item">
+                <div class="question">What happens if two players have the exact same category of hand in a row?</div>
+                <div class="answer">Tie-breakers follow standard poker rules. For example, a Pair of Kings beats a Pair of Tens. If the pairs are identical, the highest kicker card breaks the tie. If all cards are identical, the row is a push (0 points exchanged).</div>
+            </div>
+            <div class="faq-item">
+                <div class="question">What happens if two players are dealt a Royalty in the same round?</div>
+                <div class="answer">While incredibly rare, if two players declare a Royalty, the higher ranking Royalty wins the points. A Dragon beats all other Royalties. If they hold the exact same type of Royalty (e.g., both have Three Straights), it is typically treated as a tie, or settled by comparing the highest individual straight.</div>
+            </div>
+            <div class="faq-item">
+                <div class="question">Is a 3-card Straight or Flush legal in the front hand if you are trying to make a "Three Straights/Flushes" Royalty?</div>
+                <div class="answer">Yes. This is the only exception where straights or flushes are recognized in the front hand. During standard gameplay comparison, they do not count. But if they form a complete, 13-card Royalty across all rows, the front hand requirement is satisfied.</div>
+            </div>
+            <div class="faq-item">
+                <div class="question">Is Pusoy a game of skill or luck?</div>
+                <div class="answer">It is a mix of both. The 13 cards you receive involve luck, but winning consistently depends heavily on skill—specifically in balancing row strength, optimizing points against different opponents, and strictly avoiding fouls.</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
