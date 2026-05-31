@@ -948,6 +948,13 @@
             const cancelBtn = document.getElementById('btnCancelSetup');
             const fixSection = document.getElementById('setupFixSection');
 
+            // Hide settlement section during setup/new game setup
+            const settlement = document.getElementById('game-settlement-section');
+            if (settlement) {
+                settlement.classList.add('hidden');
+                settlement.style.setProperty('display', 'none', 'important');
+            }
+
             // Set inputs to active game values if mid-match
             document.getElementById('setupP1').value = PLAYERS[0];
             document.getElementById('setupP2').value = PLAYERS[1];
@@ -1187,15 +1194,16 @@
             checkNaturals();
             updateProgressIndicator();
 
-            if (activeGameSessionId) {
+            if (activeGameSessionId && historyLog.length > 0) {
                 showSettlementForData(PLAYERS, scores, unitVal);
                 const modal = document.getElementById('game-settlement-section');
-                if (modal.classList.contains('hidden')) {
-                    modal.classList.add('minimized');
-                    modal.classList.remove('hidden');
-                }
+                modal.style.removeProperty('display');
+                modal.classList.add('minimized');
+                modal.classList.remove('hidden');
             } else {
-                document.getElementById('game-settlement-section').classList.add('hidden');
+                const modal = document.getElementById('game-settlement-section');
+                modal.classList.add('hidden');
+                modal.style.setProperty('display', 'none', 'important');
             }
         }
 
@@ -1766,19 +1774,23 @@
             document.getElementById('btnCommit').disabled = (sum !== 0);
             
             const errorContainer = document.getElementById('auditError');
-            const errorText = document.getElementById('auditErrorText');
             if (sum === 0) {
                 if (errorContainer) {
+                    errorContainer.innerHTML = '';
                     errorContainer.classList.add('hidden');
                     errorContainer.style.display = 'none';
                 }
-                if (errorText) errorText.innerText = '';
             } else {
                 if (errorContainer) {
+                    errorContainer.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-rose-400 inline-block shrink-0">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                        </svg>
+                        <span id="auditErrorText">Audit Error: System points sum is ${sum} (must be 0). Check pushes/royalty inputs.</span>
+                    `;
                     errorContainer.classList.remove('hidden');
                     errorContainer.style.display = 'flex';
                 }
-                if (errorText) errorText.innerText = `Audit Error: System points sum is ${sum} (must be 0). Check pushes/royalty inputs.`;
             }
         }
 
@@ -1923,6 +1935,7 @@
 
             if(debtors.length === 0 && creditors.length === 0) {
                 list.innerHTML = '<div class="text-center text-gray-500 italic py-6">All scores are 0. Everyone is even!</div>';
+                document.getElementById('game-settlement-section').style.removeProperty('display');
                 document.getElementById('game-settlement-section').classList.remove('hidden');
                 return;
             }
@@ -1964,6 +1977,7 @@
             }
             
             list.innerHTML = htmlStr;
+            document.getElementById('game-settlement-section').style.removeProperty('display');
             document.getElementById('game-settlement-section').classList.remove('hidden');
         }
 
@@ -1976,6 +1990,7 @@
                 archiveCurrentGame(true);
                 showSettlement();
                 const modal = document.getElementById('game-settlement-section');
+                modal.style.removeProperty('display');
                 modal.classList.remove('minimized');
                 modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
@@ -2026,6 +2041,7 @@
 
         function handleSettlementModalClick(event) {
             const modal = document.getElementById('game-settlement-section');
+            modal.style.removeProperty('display');
             if (modal.classList.contains('minimized')) {
                 modal.classList.remove('minimized');
             }
@@ -2218,6 +2234,10 @@
             const game = archives.find(g => g.id === id);
             if (!game) return;
             showSettlementForData(game.players, game.scores, game.unitVal);
+            const modal = document.getElementById('game-settlement-section');
+            if (modal) {
+                modal.classList.remove('minimized');
+            }
         }
 
         function exportArchives() {
