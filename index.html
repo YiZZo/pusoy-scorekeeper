@@ -387,7 +387,7 @@
         }
 
         /* Minimized Settlement Modal State */
-        #settlementModal.minimized {
+        #game-settlement-section.minimized {
             background-color: transparent !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
@@ -403,7 +403,7 @@
             right: auto !important;
         }
 
-        #settlementModal.minimized .glass-panel {
+        #game-settlement-section.minimized .glass-panel {
             pointer-events: auto !important;
             width: auto !important;
             max-width: none !important;
@@ -416,11 +416,11 @@
         }
 
         /* Hide elements when minimized */
-        #settlementModal.minimized h2,
-        #settlementModal.minimized p,
-        #settlementModal.minimized #settlementList,
-        #settlementModal.minimized .mt-6,
-        #settlementModal.minimized .absolute {
+        #game-settlement-section.minimized h2,
+        #game-settlement-section.minimized p,
+        #game-settlement-section.minimized #settlementList,
+        #game-settlement-section.minimized .mt-6,
+        #game-settlement-section.minimized .absolute {
             display: none !important;
         }
 
@@ -428,7 +428,7 @@
         .minimized-label {
             display: none;
         }
-        #settlementModal.minimized .minimized-label {
+        #game-settlement-section.minimized .minimized-label {
             display: flex !important;
             align-items: center;
             gap: 8px;
@@ -691,7 +691,7 @@
     </div> <!-- /dashboardView -->
 
     <!-- Modal: Settlement -->
-    <div id="settlementModal" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-[80] backdrop-blur-md p-4">
+    <div id="game-settlement-section" class="hidden fixed inset-0 bg-gray-950/80 flex items-center justify-center z-[80] backdrop-blur-md p-4">
         <div onclick="handleSettlementModalClick(event)" class="glass-panel !bg-[#0b0c1e]/90 border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button id="btnSettlementMinimize" onclick="toggleSettlementMinimize(event)" class="absolute top-4 left-4 text-gray-500 hover:text-white text-2xl transition">&times;</button>
             
@@ -1186,6 +1186,17 @@
             renderFix();
             checkNaturals();
             updateProgressIndicator();
+
+            if (activeGameSessionId) {
+                showSettlementForData(PLAYERS, scores, unitVal);
+                const modal = document.getElementById('game-settlement-section');
+                if (modal.classList.contains('hidden')) {
+                    modal.classList.add('minimized');
+                    modal.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('game-settlement-section').classList.add('hidden');
+            }
         }
 
         // --- RENDERERS ---
@@ -1899,7 +1910,7 @@
 
             if(debtors.length === 0 && creditors.length === 0) {
                 list.innerHTML = '<div class="text-center text-gray-500 italic py-6">All scores are 0. Everyone is even!</div>';
-                document.getElementById('settlementModal').classList.remove('hidden');
+                document.getElementById('game-settlement-section').classList.remove('hidden');
                 return;
             }
 
@@ -1940,7 +1951,7 @@
             }
             
             list.innerHTML = htmlStr;
-            document.getElementById('settlementModal').classList.remove('hidden');
+            document.getElementById('game-settlement-section').classList.remove('hidden');
         }
 
         function showSettlement() {
@@ -1951,12 +1962,21 @@
             if (confirm("End current game session and calculate final settlements?")) {
                 archiveCurrentGame(true);
                 showSettlement();
+                const modal = document.getElementById('game-settlement-section');
+                modal.classList.remove('minimized');
+                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
         function handleSettlementDone() {
             if (confirm("Has everyone paid up and settled their balances?")) {
                 if (confirm("Do you want to start a new game?")) {
+                    // Force inline style overrides at the absolute top of the loop block
+                    document.getElementById('game-settlement-section').style.setProperty('display', 'none', 'important');
+                    const modal = document.getElementById('game-settlement-section');
+                    modal.classList.add('minimized');
+                    modal.classList.add('hidden');
+
                     // Clear active game state
                     localStorage.removeItem(STORAGE_KEYS.ACTIVE_GAME);
                     activeGameSessionId = null;
@@ -1965,9 +1985,6 @@
                     historyLog = [];
                     unitVal = 0.50;
                     initRoundState();
-
-                    // Hide settlement panel
-                    document.getElementById('settlementModal').classList.add('hidden');
 
                     // Redirect back to Setup View
                     showSetupView(false);
@@ -1978,21 +1995,24 @@
                     renderArchives();
                     syncSettingsInputs();
 
+                    // Scroll to top focus
+                    window.scrollTo(0, 0);
+
                     showToast("Scores and history reset. Ready for a new game!");
                 } else {
-                    document.getElementById('settlementModal').classList.add('hidden');
+                    document.getElementById('game-settlement-section').classList.add('hidden');
                 }
             }
         }
 
         function toggleSettlementMinimize(event) {
             if (event) event.stopPropagation();
-            const modal = document.getElementById('settlementModal');
+            const modal = document.getElementById('game-settlement-section');
             modal.classList.toggle('minimized');
         }
 
         function handleSettlementModalClick(event) {
-            const modal = document.getElementById('settlementModal');
+            const modal = document.getElementById('game-settlement-section');
             if (modal.classList.contains('minimized')) {
                 modal.classList.remove('minimized');
             }
