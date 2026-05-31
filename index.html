@@ -1719,14 +1719,15 @@
                 return;
             }
             
-            const sum = tempScores.reduce((a, b) => a + b, 0);
+            const normalizedScores = tempScores.map(val => Number(val));
+            const sum = normalizedScores.reduce((a, b) => Number(a) + Number(b), 0);
             
             // Render audit preview
             const grid = document.getElementById('auditGrid');
             if (grid) {
                 grid.innerHTML = '';
                 PLAYERS.forEach((name, i) => {
-                    const s = tempScores[i];
+                    const s = normalizedScores[i];
                     const absoluteCash = Math.abs(s * unitVal).toFixed(2);
                     const cashText = s > 0 ? `(+$${absoluteCash})` : (s < 0 ? `(-$${absoluteCash})` : `($0.00)`);
                     const isPos = s > 0;
@@ -1763,9 +1764,21 @@
             }
             
             document.getElementById('btnCommit').disabled = (sum !== 0);
-            document.getElementById('auditError').classList.toggle('hidden', sum === 0);
-            if (sum !== 0) {
-                document.getElementById('auditErrorText').innerText = `Audit Error: System points sum is ${sum} (must be 0). Check pushes/royalty inputs.`;
+            
+            const errorContainer = document.getElementById('auditError');
+            const errorText = document.getElementById('auditErrorText');
+            if (sum === 0) {
+                if (errorContainer) {
+                    errorContainer.classList.add('hidden');
+                    errorContainer.style.display = 'none';
+                }
+                if (errorText) errorText.innerText = '';
+            } else {
+                if (errorContainer) {
+                    errorContainer.classList.remove('hidden');
+                    errorContainer.style.display = 'flex';
+                }
+                if (errorText) errorText.innerText = `Audit Error: System points sum is ${sum} (must be 0). Check pushes/royalty inputs.`;
             }
         }
 
