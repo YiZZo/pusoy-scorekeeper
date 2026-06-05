@@ -1116,7 +1116,7 @@
             <div class="matchup-section">
                 <h3>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 3M21 7.5H7.5" /></svg>
-                    Step 2 — Row-by-Row Matchups (from Your perspective)
+                    Step 2a — Your Matchups (You vs Everyone)
                 </h3>
                 <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:18px;">You compare against each other player separately. Win a row = +1 point. Lose a row = −1 point. A foul means the fouling player automatically loses every row.</p>
 
@@ -1231,16 +1231,141 @@
                     </div>
 
                 </div><!-- /matchup-grid -->
-            </div><!-- /matchup-section -->
+            </div><!-- /matchup-section (Part A) -->
+
+            <!-- ── Step 2b: The Other Matchups ───────────────── -->
+            <div class="matchup-section">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 3M21 7.5H7.5" /></svg>
+                    Step 2b — The Other Matchups (Everyone vs Everyone)
+                </h3>
+                <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:18px;">
+                    Remember — <strong>every player also compares against each other</strong>, not just against you. With 4 players there are <strong>6 total matchups</strong> per round. The 3 remaining matchups below happen at the same time as yours.
+                </p>
+
+                <div class="matchup-grid">
+
+                    <!-- Player 2 vs Player 3 (foul) -->
+                    <div class="matchup-card" style="border-color:rgba(244,63,94,0.1);">
+                        <div class="mu-title">🔵 Player 2 vs 🔴 Player 3</div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Front</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">High J</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f87171;">FOUL</span>
+                            </div>
+                            <span class="mu-result win" style="color:#60a5fa;">P2 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Middle</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">Two Pair</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f87171;">FOUL</span>
+                            </div>
+                            <span class="mu-result win" style="color:#60a5fa;">P2 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Back</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">Straight</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f87171;">FOUL</span>
+                            </div>
+                            <span class="mu-result win" style="color:#60a5fa;">P2 +1 ✓</span>
+                        </div>
+                        <div class="mu-total">
+                            <span class="mu-total-label">P3 foul — P2 wins</span>
+                            <span class="mu-total-value plus" style="color:#60a5fa;">P2 +3</span>
+                        </div>
+                    </div>
+
+                    <!-- Player 2 vs Player 4 -->
+                    <div class="matchup-card">
+                        <div class="mu-title">🔵 Player 2 vs 🟡 Player 4</div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Front</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">High J</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Pair Aces</span>
+                            </div>
+                            <span class="mu-result loss" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Middle</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">Two Pair</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Straight</span>
+                            </div>
+                            <span class="mu-result loss" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Back</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#60a5fa;">Straight</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Four 2s</span>
+                            </div>
+                            <span class="mu-result loss" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-total">
+                            <span class="mu-total-label">P4 wins <span class="scoop-badge">SCOOP!</span></span>
+                            <span class="mu-total-value plus" style="color:#f59e0b;">P4 +3</span>
+                        </div>
+                    </div>
+
+                    <!-- Player 3 vs Player 4 (foul) -->
+                    <div class="matchup-card" style="border-color:rgba(244,63,94,0.1);">
+                        <div class="mu-title">🔴 Player 3 vs 🟡 Player 4</div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Front</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#f87171;">FOUL</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Pair Aces</span>
+                            </div>
+                            <span class="mu-result win" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Middle</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#f87171;">FOUL</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Straight</span>
+                            </div>
+                            <span class="mu-result win" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-row">
+                            <span class="mu-row-label">Back</span>
+                            <div class="mu-hands">
+                                <span class="mu-you" style="color:#f87171;">FOUL</span>
+                                <span class="mu-vs">vs</span>
+                                <span class="mu-opp" style="color:#f59e0b;">Four 2s</span>
+                            </div>
+                            <span class="mu-result win" style="color:#f59e0b;">P4 +1 ✓</span>
+                        </div>
+                        <div class="mu-total">
+                            <span class="mu-total-label">P3 foul — P4 wins</span>
+                            <span class="mu-total-value plus" style="color:#f59e0b;">P4 +3</span>
+                        </div>
+                    </div>
+
+                </div><!-- /matchup-grid Part B -->
+            </div><!-- /matchup-section Part B -->
 
             <!-- ── Step 3: Final Tally ─────────────────────────── -->
             <h3 style="color: var(--accent-mint); font-size: 1.1rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="icon-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
-                Step 3 — End of Round Point Tally
+                Step 3 — End of Round Point Tally (All 6 Matchups Combined)
             </h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">Each player's score is the sum of their results across all 3 matchups they played. Scores across all players should net to zero — every point won by one player is a point lost by another.</p>
 
             <div class="score-tally">
                 <h4>📊 Round 1 Final Scores</h4>
+
                 <div class="tally-row">
                     <span class="tally-player you">🟢 You</span>
                     <span class="tally-breakdown">vs P2: +3 (Scoop) · vs P3: +3 (Foul win) · vs P4: −1</span>
@@ -1253,7 +1378,7 @@
                 </div>
                 <div class="tally-row">
                     <span class="tally-player foul">🔴 Player 3</span>
-                    <span class="tally-breakdown">FOUL — automatically loses all 3 matchups (−3 each)</span>
+                    <span class="tally-breakdown">FOUL — auto-loses all 3 matchups: vs You −3 · vs P2 −3 · vs P4 −3</span>
                     <span class="tally-total neg">−9</span>
                 </div>
                 <div class="tally-row">
@@ -1261,8 +1386,15 @@
                     <span class="tally-breakdown">vs You: +1 · vs P2: +3 (Scoop) · vs P3: +3 (Foul win)</span>
                     <span class="tally-total pos">+7</span>
                 </div>
+
+                <!-- Net check -->
+                <div style="border-top: 1px solid rgba(52,211,153,0.12); margin-top: 12px; padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.06em;">Table Net Total</span>
+                    <span style="font-size:0.95rem; font-weight:900; color:rgba(255,255,255,0.35);">(+5) + (−3) + (−9) + (+7) = <span style="color:var(--accent-mint);">0 ✓</span></span>
+                </div>
+
                 <div style="margin-top:16px; padding:14px 16px; background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.15); border-radius:12px; font-size:0.88rem; color:#a7f3d0;">
-                    💡 <strong>Key Takeaways:</strong> Player 3's foul cost them <strong>−9 points</strong> in a single round — always double-check your hierarchy before laying down. Player 4 won the most despite losing the Front row to You because <strong>Four of a Kind beats Full House</strong> in the Back. Scoops (winning all 3 rows) are worth triple points, making them a major swing factor.
+                    💡 <strong>Key Takeaways:</strong> Player 3's foul cost them <strong>−9 points</strong> across all 3 of their matchups — always double-check your hierarchy before laying down. Player 4 came out on top because <strong>Four of a Kind beats Full House</strong> in the Back, and they scooped Player 2. Notice the table net always equals zero — Pusoy is a zero-sum game.
                 </div>
             </div>
 
