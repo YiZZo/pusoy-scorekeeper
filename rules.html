@@ -39,6 +39,10 @@
             overflow-x: hidden;
         }
 
+        html {
+            overflow-x: hidden; /* Ensures horizontal scroll is suppressed at the viewport level */
+        }
+
         /* Ambient Glow Backgrounds */
         .ambient-glow {
             position: fixed;
@@ -139,6 +143,9 @@
             -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
             transition: var(--transition-smooth);
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            min-width: 0;  /* Prevent card from forcing layout wider than grid track */
         }
         .card:hover {
             border-color: rgba(52, 211, 153, 0.25);
@@ -211,6 +218,7 @@
             border-radius: 16px;
             text-align: center;
             margin: 20px 0;
+            overflow-x: hidden; /* Contain any pill overflow on narrow screens */
         }
         .golden-rule-title {
             color: var(--accent-mint);
@@ -222,6 +230,7 @@
         }
         .golden-rule-visual {
             display: flex;
+            flex-wrap: wrap;          /* Allow wrapping on very narrow screens */
             justify-content: center;
             align-items: center;
             gap: 16px;
@@ -243,6 +252,7 @@
             padding: 4px 12px;
             border-radius: 6px;
             border: 1px solid rgba(16, 185, 129, 0.3);
+            white-space: nowrap;      /* Keep each pill on one line */
         }
 
         /* Tables styling */
@@ -348,6 +358,10 @@
             grid-template-columns: 1fr;
             gap: 24px;
         }
+        /* ━━ CRITICAL: prevents CSS Grid min-width blowout on mobile ━━ */
+        .grid-2 > * {
+            min-width: 0;
+        }
         @media (min-width: 768px) {
             .grid-2 {
                 grid-template-columns: 1fr 1fr;
@@ -431,6 +445,53 @@
             color: #fff;
         }
 
+        /* ── Mobile Responsive Overrides ─────────────────────────────── */
+        @media (max-width: 600px) {
+            /* Reduce card padding so content has more breathing room */
+            .card {
+                padding: 20px 18px;
+                border-radius: 18px;
+            }
+
+            /* Scale down the golden-rule-visual pill layout */
+            .golden-rule-visual {
+                font-size: 1rem;
+                gap: 10px;
+                padding: 10px 14px;
+            }
+            .golden-rule-visual .rule-part {
+                padding: 3px 8px;
+                font-size: 0.95rem;
+            }
+
+            /* Make header wrap gracefully */
+            header {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 14px 16px;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+
+            /* Reduce h2 size slightly */
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            /* Scale down body padding to give more horizontal room */
+            body {
+                padding: 16px 12px;
+            }
+
+            /* Scale down h1 so it doesn't overflow narrow screens */
+            .title-section h1 {
+                font-size: 1.7rem;
+            }
+            .title-section p {
+                font-size: 0.95rem;
+            }
+        }
         /* ── Round 1 Sample Section ─────────────────────────── */
         .round-intro {
             font-size: 1rem;
